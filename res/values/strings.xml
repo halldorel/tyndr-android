@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Týndr</string>
+    <string name="upplysingar">Týndr hjálpar þér að finna týnd gæludýr og gerir þér kleyft að láta aðra vita ef þú finnur dýr sem gæti verið týnt</string>
+    <string name="action_settings">Settings</string>
+    <string name="tynt">Týnt</string>
+    <string name="fundid">Fundið</string>
+    <string name="title_activity_form">Form</string>
+    <string name="fundidTitle">Skrá Fundið Dýr</string>
+    <string name="tyntTitle">Skrá Týnt Dýr</string>
+    <string name="nafnLabel">Nafn Dýrs</string>
+    <string name="tegundLabel">Tegund</string>
+    <string name="kynLabel">Kyn</string>
+    <string name="undirtegundLabel">Undirtegund</string>
+    <string name="aldurLabel">Aldur</string>
+    <string name="tyndistLabel">Týndist dags</string>
+    <string name="fannstLabel">Fannst dags</string>
+    <string name="skra">Skrá</string>
+    <string name="title_activity_skoda_auglysingar">SkodaAuglysingar</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="skodaAuglysingar">Skoða Auglýsingar</string>
+    <string name="title_activity_adds">Adds</string>
+
+</resources>
