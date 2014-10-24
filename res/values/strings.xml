@@ -21,5 +21,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="skodaAuglysingar">Skoða Auglýsingar</string>
     <string name="title_activity_adds">Adds</string>
+    <string name="title_activity_log_in">Skráðu þig inn</string>
 
 </resources>
