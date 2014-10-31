@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="bleikur" type="color">#CA5ABE</item>
+    <item name="svartur" type="color">#000000</item>
 </resources>

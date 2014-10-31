@@ -1,13 +1,15 @@
 package com.HBV1.tyndr;
 
 import android.app.Activity;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 /**
  * 
  * @author Björn Sigurðsson
@@ -65,10 +67,10 @@ public class DrawerNavigator implements ListView.OnItemClickListener {
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                parent.getActionBar().setTitle("hallo hallo");
+                parent.getActionBar().setTitle(parent.getTitle());
             }
         };
-        
+
         drawerLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -79,6 +81,7 @@ public class DrawerNavigator implements ListView.OnItemClickListener {
         // Set the drawer toggle as the DrawerListener
         drawerLayout.setDrawerListener(mDrawerToggle);
 		String[] operators = new String[]{
+				parent.getResources().getString(R.string.skodaAuglysingar),
 				parent.getResources().getString(R.string.tyntTitle),
 				parent.getResources().getString(R.string.fundidTitle)
 				};
@@ -92,16 +95,20 @@ public class DrawerNavigator implements ListView.OnItemClickListener {
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
-//		String op = ((TextView) view).getText().toString();
-//		if (op.equals(parent.getResources().getString(R.string.addition))) {
-//			Intent intent = new Intent(parent, AdditionActivity.class);
-//			parent.startActivity(intent);
-//			if (finishActivity) parent.finish();
-//		} else if (op.equals(parent.getResources().getString(R.string.multiplication))) {
-//			Intent intent = new Intent(parent, MultiplicationActivity.class);
-//			parent.startActivity(intent);
+		String selectedView = ((TextView) view).getText().toString();
+		if (selectedView.equals(parent.getResources().getString(R.string.skodaAuglysingar))) {
+			Intent intent = new Intent(parent, Adds.class);
+			parent.startActivity(intent);
+		} else if (selectedView.equals(parent.getResources().getString(R.string.tyntTitle))) {
+			Intent intent = new Intent(parent, Form.class);
+	    	intent.putExtra("titill", "tynt");
+			parent.startActivity(intent);
+		} else if (selectedView.equals(parent.getResources().getString(R.string.fundidTitle))) {
+			Intent intent = new Intent(parent, Form.class);
+	    	intent.putExtra("titill", "fundid");
+			parent.startActivity(intent);
+		}
 		if (finishActivity) parent.finish();
-//		}
 		drawerLayout.closeDrawer(drawerNavigator);
 	}
 	

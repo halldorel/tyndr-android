@@ -3,20 +3,26 @@ package com.HBV1.tyndr;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.HBV1.tyndrNetwork.GET;
+
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.HBV1.tyndrNetwork.GET;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -27,12 +33,15 @@ public class Adds extends Activity {
 
 	private Spinner filterSpinner; //Spinner hlutur
 	private String auglysingar; // geymir svarid fra servernum.
+	private DrawerNavigator drawerNavigator;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_adds);
+		setContentView(R.layout.pet_list);
+		drawerNavigator = new DrawerNavigator(this);
+		drawerNavigator.setFinishActivity(false);
 		
 		filterSpinner = (Spinner) findViewById(R.id.filter);
 		upphafsstilla();
@@ -57,18 +66,20 @@ public class Adds extends Activity {
 		getMenuInflater().inflate(R.menu.adds, menu);
 		return true;
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+		if (drawerNavigator.openItem(item)) {
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
-	}
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 	
 	/*
 	 * uphafsstillir spinner hlut og setur hlustara a hann.
@@ -89,7 +100,7 @@ public class Adds extends Activity {
 		
 		filterSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,int arg2, long arg3) {
+			public void onItemSelected(AdapterView<?> arg0, View arg1 ,int arg2, long arg3) {
 				filter(arg2);
 			}
 			@Override
@@ -148,6 +159,8 @@ public class Adds extends Activity {
 			break;
 		}
 	}
+	
+	
 		
 	/*
 	 * Fallid fyllir a og birtir listann sem auglysingarnar eru syndar a. 
@@ -155,22 +168,34 @@ public class Adds extends Activity {
 	 */
 	void fyllaLista() 
 	{
-		List<String> Nofn = new ArrayList<String>();
-		JSONArray jerry;
+		List<Pet> pets = new ArrayList<Pet>();
 		try {
-			jerry = new JSONArray(auglysingar);
+			JSONArray jerry = new JSONArray(auglysingar);
+
 			for(int i = 0; i<jerry.length();i++)
 			{
-				JSONObject temp = (JSONObject) jerry.get(i);
-				Nofn.add(temp.getString("name").toString());
+				JSONObject newPet = (JSONObject) jerry.get(i);
+				pets.add( new Pet(
+						newPet.getString("name"),
+						newPet.getString("location"),
+						newPet.getString("description")));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, android.R.id.text1, Nofn);
-		ListView list = (ListView) findViewById(R.id.Listi);
-		list.setAdapter(adapter); 
+		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
+		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		for (int i=0; i<pets.size(); i++) {
+			View view = inflater.inflate(R.layout.pet_list_item, insertPoint, false);
+			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
+			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
+			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
+			name.setText(pets.get(i).name);
+			location.setText(pets.get(i).location);
+			description.setText(pets.get(i).description);
+			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		}
 	}
 }

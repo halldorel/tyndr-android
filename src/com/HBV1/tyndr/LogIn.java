@@ -39,7 +39,7 @@ public class LogIn extends Activity {
 		// authentikeita her !!!
 		Intent opna = new Intent(this,OpnunarGluggi.class);
 		startActivity(opna);
-		
+		finish();
 	}
 	
 	public void nyskra(View view)
