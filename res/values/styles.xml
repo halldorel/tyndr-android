@@ -21,10 +21,12 @@
         <item name="android:actionBarStyle">@style/bleikurActionBar</item>
         <item name="android:buttonStyle">@style/button</item>
         <item name="android:editTextStyle">@style/editText</item>
+        <item name="android:spinnerStyle">@style/spinner</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinner_text</item>
     </style>
 
     <style name="bleikurActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#CA5ABE</item>
+        <item name="android:background">@color/bleikur</item>
         <item name="android:titleTextStyle">@style/hvitirStafir</item>
     </style>
     
@@ -42,7 +44,16 @@
     </style>
     
     <style name="editText" parent="@android:style/Widget.EditText">
-        <item name="android:textColor">#CA5ABE</item>
+        <item name="android:textColor">@color/bleikur</item>
         <item name="android:background">@drawable/edit_pink</item>
+    </style>
+    
+    <style name="spinner" parent="@android:style/Widget.Spinner">
+        <item name="android:background">@drawable/pink_spinner</item>
+        <item name="android:textColor">@color/bleikur</item>
+    </style>
+    
+    <style name="spinner_text" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/bleikur</item>
     </style>
 </resources>

@@ -82,7 +82,7 @@ public class Form extends Activity {
 		tegundir.add("Hestur"); // pos 3
 		tegundir.add("Belja"); // pos 4
 		
-		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tegundir);
+		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		tegundirSpinner.setAdapter(adapt);
 		
@@ -131,7 +131,7 @@ public class Form extends Activity {
 		if (tegund!=0)
 			kyn.add("Veit ekki");
 		
-		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, kyn);
+		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, kyn);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		kynSpinner.setAdapter(adapt);
 					
@@ -169,7 +169,7 @@ public class Form extends Activity {
 		if (tegund!=0)
 			undirtegund.add("Veit ekki");
 		
-		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, undirtegund);
+		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, undirtegund);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		undirtegundirSpinner.setAdapter(adapt);
 	}
