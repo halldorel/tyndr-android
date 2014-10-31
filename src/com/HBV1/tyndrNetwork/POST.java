@@ -35,20 +35,15 @@ public class POST extends AsyncTask<String, Void, Void>
 
 	@Override
 	protected Void doInBackground(String... urls) {
-		InputStream inputStream = null;
 		StringEntity se = null;
 		try
 		{
-		HttpClient tenging = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(urls[0]);
 		
 		se = new StringEntity(msg.toString(), "UTF-8");
         se.setContentType("application/json; charset=UTF-8");
 		
 		httpPost.setEntity(se);
-		
-        HttpResponse httpResponse = tenging.execute(httpPost);
-        inputStream = httpResponse.getEntity().getContent();
 
 		} catch (Exception e){
 			Log.d("http", "error Message: " +e);

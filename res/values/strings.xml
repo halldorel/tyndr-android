@@ -22,5 +22,6 @@
     <string name="skodaAuglysingar">Skoða Auglýsingar</string>
     <string name="title_activity_adds">Adds</string>
     <string name="title_activity_log_in">Skráðu þig inn</string>
+    <string name="title_activity_nysraning">Nýskráning</string>
 
 </resources>

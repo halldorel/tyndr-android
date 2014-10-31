@@ -5,11 +5,17 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp" >
     
+     <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Sláðu inn tölvupóstfang"/>
+    
     <EditText 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:hint="Sláðu inn tölvupóstfang"/>
+        android:hint="Sláðu inn notendanafn"/>
     
     <EditText
         android:layout_width="match_parent"
@@ -17,19 +23,16 @@
         android:inputType="textPassword"
         android:hint="Sláðu inn lykilorð"/>
     
+   	<EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:hint="Staðfesta lykilorð"/>
+    
     <Button 
         android:id="@+id/logIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Innskrá"
-        android:onClick="innSkra"/>
-    
-    <Button
-        android:id="@+id/nyskra"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Nýskrá"
-        android:onClick="nyskra"/>
-    
-    
+        android:text="Skrá mig"/> 
+        
     </LinearLayout>
