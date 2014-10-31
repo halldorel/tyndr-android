@@ -42,7 +42,7 @@ public class LogIn extends Activity {
 		
 	}
 	
-	public void nySkra(View view)
+	public void nyskra(View view)
 	{
 		Intent nyskra = new Intent(this,Nyskraning.class);
 		startActivity(nyskra);
