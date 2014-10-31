@@ -94,7 +94,7 @@ public class Adds extends Activity {
 		tegundir.add("Tynd");
 		tegundir.add("fundin"); 
 		
-		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tegundir);
+		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		filterSpinner.setAdapter(adapt);
 		
