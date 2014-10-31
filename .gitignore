@@ -42,6 +42,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
+project.properties
 
 # External tool builders
 .externalToolBuilders/
@@ -55,7 +56,7 @@ local.properties
 # PDT-specific
 .buildpath
 
-# sbteclipse plugin 
+# sbteclipse plugin
 .target
 
 # TeXlipse plugin

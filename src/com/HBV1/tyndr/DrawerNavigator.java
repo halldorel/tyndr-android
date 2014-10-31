@@ -105,7 +105,7 @@ public class DrawerNavigator implements ListView.OnItemClickListener {
 		drawerLayout.closeDrawer(drawerNavigator);
 	}
 	
-	public boolean flupp(MenuItem item) {
+	public boolean openItem(MenuItem item) {
 		mDrawerToggle.onOptionsItemSelected(item);
 		return true;
 	}
