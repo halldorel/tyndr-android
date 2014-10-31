@@ -2,6 +2,7 @@ package com.HBV1.tyndr;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -187,14 +189,23 @@ public class Adds extends Activity {
 		
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		Random rand = new Random();
 		for (int i=0; i<pets.size(); i++) {
 			View view = inflater.inflate(R.layout.pet_list_item, insertPoint, false);
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
+			ImageView image = (ImageView) view.findViewById(R.id.lost_pet_pic);
 			name.setText(pets.get(i).name);
 			location.setText(pets.get(i).location);
 			description.setText(pets.get(i).description);
+			switch (rand.nextInt(5)) {
+			case 0: image.setImageDrawable(getResources().getDrawable(R.drawable.cat)); break;
+			case 1: image.setImageDrawable(getResources().getDrawable(R.drawable.dog)); break;
+			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.horse)); break;
+			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
+			case 4: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
+			}
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
 	}
