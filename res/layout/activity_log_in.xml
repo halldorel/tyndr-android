@@ -9,27 +9,31 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
-        android:hint="Sláðu inn tölvupóstfang"/>
+        android:hint="Sláðu inn tölvupóstfang"
+        android:layout_margin="@dimen/editText_margin"/>
     
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:hint="Sláðu inn lykilorð"/>
+        android:hint="Sláðu inn lykilorð"
+        android:layout_margin="@dimen/editText_margin"/>
     
     <Button 
         android:id="@+id/logIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Innskrá"
-        android:onClick="innSkra"/>
+        android:onClick="innSkra"
+        android:layout_margin="@dimen/button_margin"/>/>
     
     <Button
         android:id="@+id/nyskra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Nýskrá"
-        android:onClick="nyskra"/>
+        android:onClick="nyskra"
+        android:layout_margin="@dimen/button_margin"/>/>
     
     
     </LinearLayout>

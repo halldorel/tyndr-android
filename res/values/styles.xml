@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -20,6 +20,7 @@
     <style name="MyTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/bleikurActionBar</item>
         <item name="android:buttonStyle">@style/button</item>
+        <item name="android:editTextStyle">@style/editText</item>
     </style>
 
     <style name="bleikurActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
@@ -32,16 +33,16 @@
     </style>
     
     <style name="button" parent="@android:style/Widget.Button">
-        <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">#FFFFFFFF</item>
-        <item name="android:shadowColor">#FF000000</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">-1</item>
-        <item name="android:shadowRadius">0.2</item>
         <item name="android:textSize">16dip</item>
         <item name="android:textStyle">bold</item>
         <item name="android:background">@drawable/button</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+    </style>
+    
+    <style name="editText" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">#CA5ABE</item>
+        <item name="android:background">@drawable/edit_pink</item>
     </style>
 </resources>

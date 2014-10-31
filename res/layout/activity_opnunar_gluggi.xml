@@ -31,21 +31,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="tynt"
-                android:text="@string/tynt" />
+                android:text="@string/tynt"
+                android:layout_margin="5dp" />
 
             <Button
                 android:id="@+id/fundid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="fundid"
-                android:text="@string/fundid" />
+                android:text="@string/fundid"
+                android:layout_margin="@dimen/button_margin"/> />
 
             <Button
                 android:id="@+id/skodaAuglysingar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:onClick="auglysingar"
-                android:text="@string/skodaAuglysingar" />
+                android:text="@string/skodaAuglysingar"
+                android:layout_margin="@dimen/button_margin"/> />
         </LinearLayout>
     </LinearLayout>
 

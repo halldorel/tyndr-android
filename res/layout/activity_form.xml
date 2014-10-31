@@ -36,7 +36,8 @@
         	    android:layout_width="match_parent"
         	    android:layout_height="wrap_content"
         	    android:hint="Nafn Dýrs"
-        	    android:inputType="text" >
+        	    android:inputType="text"
+        	    android:layout_margin="@dimen/editText_margin" >
 
             	<requestFocus />
         	</EditText>
@@ -134,7 +135,8 @@
 	            android:id="@+id/aldur"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:inputType="number" />
+	            android:inputType="number"
+	            android:layout_margin="@dimen/editText_margin" />
 	        
 	   	</LinearLayout>
 	    
@@ -154,7 +156,8 @@
 	            android:id="@+id/dagsetning"
 	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:hint="týnidist dags"/>
+	            android:hint="týnidist dags"
+	            android:layout_margin="@dimen/editText_margin"/>
 	        
 	   	</LinearLayout>      
 	</LinearLayout>
@@ -164,5 +167,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/skra"
-        android:onClick="skra"/>
+        android:onClick="skra"
+        android:layout_margin="@dimen/button_margin"/>
 </LinearLayout>
