@@ -199,12 +199,11 @@ public class Adds extends Activity {
 			name.setText(pets.get(i).name);
 			location.setText(pets.get(i).location);
 			description.setText(pets.get(i).description);
-			switch (rand.nextInt(5)) {
+			switch (rand.nextInt(4)) {
 			case 0: image.setImageDrawable(getResources().getDrawable(R.drawable.cat)); break;
 			case 1: image.setImageDrawable(getResources().getDrawable(R.drawable.dog)); break;
-			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.horse)); break;
-			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
-			case 4: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
+			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
+			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
 			}
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
