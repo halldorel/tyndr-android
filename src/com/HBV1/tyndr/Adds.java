@@ -135,6 +135,7 @@ public class Adds extends Activity {
 				break;
 				
 		case 1:
+			
 			try {
 				auglysingar = new GET().execute("[lost]=true").get();
 			} catch (InterruptedException e) {

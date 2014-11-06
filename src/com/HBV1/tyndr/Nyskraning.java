@@ -4,7 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
+/*
+ * @author: Tomas Karl Kjartansson<tkk4@hi.is>
+ * @version: 0.1
+ * @since: 2014-10-15
+ * 
+ * Utfaerir enga virkni eins og er adra en ad birta utlitd sitt.
+ */
 public class Nyskraning extends Activity {
 
 	@Override

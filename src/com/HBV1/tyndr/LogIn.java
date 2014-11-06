@@ -7,6 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+
+/*
+ * @author: Tomas Karl Kjartansson<tkk4@hi.is>
+ * @version: 0.1
+ * @since: 2014-10-15
+ */
 public class LogIn extends Activity {
 
 	@Override
@@ -34,6 +40,11 @@ public class LogIn extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+    /*
+     * fallid sem innskra-takkinn kallar a
+     * 
+     * @param view hluturinn sem kallar a fallid
+     */
 	public void innSkra(View view)
 	{
 		// authentikeita her !!!
@@ -42,6 +53,11 @@ public class LogIn extends Activity {
 		finish();
 	}
 	
+    /*
+     * fallid sem nyskra-takkinn kallar a
+     * 
+     * @param view hluturinn sem kallar a fallid
+     */
 	public void nyskra(View view)
 	{
 		Intent nyskra = new Intent(this,Nyskraning.class);

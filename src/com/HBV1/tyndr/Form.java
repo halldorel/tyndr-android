@@ -3,24 +3,36 @@ package com.HBV1.tyndr;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import com.appspot.tyndr_server.tyndr.*;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.HBV1.tyndrNetwork.POST;
+
+
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.HBV1.tyndrNetwork.POST;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -32,12 +44,33 @@ public class Form extends Activity {
 	private Spinner tegundirSpinner, kynSpinner, undirtegundirSpinner; // spinner hlutir i vidmotinu
 	private boolean lost; // skrair hvort dyrid se tynt ed fundid
 	private final int dp_id = 23; // id sem dagaveljarinn faer
+	private final int SELECT_PICTURE = 1;
+    private String selectedImagePath;
+    //ADDED
+    private String filemanagerstring;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_form);
+		
+		ImageView Mynd = (ImageView) findViewById(R.id.mynd);
+		
+		Mynd.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,
+                        "Select Picture"), SELECT_PICTURE);
+			}
+			
+		});
+		
 
 		tegundirSpinner = (Spinner) findViewById(R.id.tegund);
 		kynSpinner = (Spinner) findViewById(R.id.kyn);
@@ -48,6 +81,56 @@ public class Form extends Activity {
 		fyllaTegundir();
 	
 	}
+	
+    //UPDATED
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                Uri selectedImageUri = data.getData();
+
+                //OI FILE Manager
+                filemanagerstring = selectedImageUri.getPath();
+                //MEDIA GALLERY
+                selectedImagePath = getPath(selectedImageUri);
+                //DEBUG PURPOSE - you can delete this if you want
+                if(selectedImagePath!=null)
+                    System.out.println(selectedImagePath);
+                else System.out.println("selectedImagePath is null");
+                if(filemanagerstring!=null)
+                    System.out.println(filemanagerstring);
+                else System.out.println("filemanagerstring is null");
+
+                //NOW WE HAVE OUR WANTED STRING
+                if(selectedImagePath!=null)
+                    System.out.println("selectedImagePath is the right one for you!");
+                else
+                    System.out.println("filemanagerstring is the right one for you!");
+            }
+        }
+    }
+
+    //UPDATED!
+    public String getPath(Uri uri) {
+    	Log.d("bla","1");
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Log.d("bla","2");
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        Log.d("bla","3");
+        if(cursor!=null)
+        {
+            //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+            //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+            int column_index = cursor
+            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            Log.d("bla","4");
+            cursor.moveToFirst();
+            Log.d("bla","5");
+            return cursor.getString(column_index);
+        }
+        else return null;
+    }
+
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -284,6 +367,9 @@ public class Form extends Activity {
 	 */
 	public void skra(View view) throws JSONException
 	{
+		
+		
+		/*
 		Calendar c = Calendar.getInstance();
 		
 		int ar = c.get(Calendar.YEAR);
@@ -305,6 +391,8 @@ public class Form extends Activity {
 		new POST(auglysing).execute("http://tyndr.herokuapp.com/api/adverts");
 		
 		finish();
+		
+		*/
 	}
 	
 }
