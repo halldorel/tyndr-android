@@ -23,5 +23,25 @@
     <string name="title_activity_adds">Adds</string>
     <string name="title_activity_log_in">Skráðu þig inn</string>
     <string name="title_activity_nysraning">Nýskráning</string>
+    <string name="feldurLabel">Feldur</string>
+    <string name="liturLabel">Litur á feld</string>
+
+    <string-array name="Feldir">
+        <item>Hárlaus</item>
+        <item>Snöggklipptur</item>
+        <item>Venjulegur</item>
+        <item>Síður</item>
+    </string-array>
+
+
+    <string-array name="Litir">
+        <item>Gulur</item>
+        <item>Rauður</item>
+        <item>Grænn</item>
+        <item>Blár</item>
+        <item>Svartur</item>
+        <item>Hvítur</item>
+        <item>Hrossaskítur</item>
+    </string-array>
 
 </resources>
