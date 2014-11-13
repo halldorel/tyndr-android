@@ -1,23 +1,16 @@
 package com.HBV1.tyndr;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import com.appspot.tyndr_server.tyndr.*;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,15 +27,28 @@ import android.widget.TextView;
 
 import com.HBV1.tyndrNetwork.POST;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
  * @version: 0.1
  * @since: 2014-10-15
  */
+
+
 public class Form extends Activity {
+
+
 	
-	private Spinner tegundirSpinner, kynSpinner, undirtegundirSpinner; // spinner hlutir i vidmotinu
-	private boolean lost; // skrair hvort dyrid se tynt ed fundid
+	private Spinner tegundirSpinner, kynSpinner, undirtegundirSpinner, feldurSpinner, litirSpinner; // spinner hlutir i vidmotinu
+    ImageView Mynd;
+    private boolean lost; // skrair hvort dyrid se tynt ed fundid
 	private final int dp_id = 23; // id sem dagaveljarinn faer
 	private final int SELECT_PICTURE = 1;
     private String selectedImagePath;
@@ -55,7 +61,7 @@ public class Form extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_form);
 		
-		ImageView Mynd = (ImageView) findViewById(R.id.mynd);
+		Mynd = (ImageView) findViewById(R.id.mynd);
 		
 		Mynd.setOnClickListener(new OnClickListener(){
 
@@ -70,11 +76,12 @@ public class Form extends Activity {
 			}
 			
 		});
-		
 
 		tegundirSpinner = (Spinner) findViewById(R.id.tegund);
 		kynSpinner = (Spinner) findViewById(R.id.kyn);
 		undirtegundirSpinner = (Spinner) findViewById(R.id.undirtegund);
+        feldurSpinner = (Spinner) findViewById(R.id.feldur);
+        litirSpinner = (Spinner) findViewById(R.id.litur);
 		
 		upphafsstilla();
 		datepicker();
@@ -87,48 +94,36 @@ public class Form extends Activity {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
                 Uri selectedImageUri = data.getData();
+                String bla = getRealPathFromURI(selectedImageUri);
+                Bitmap myBitmap = BitmapFactory.decodeFile(bla);
 
-                //OI FILE Manager
-                filemanagerstring = selectedImageUri.getPath();
-                //MEDIA GALLERY
-                selectedImagePath = getPath(selectedImageUri);
-                //DEBUG PURPOSE - you can delete this if you want
-                if(selectedImagePath!=null)
-                    System.out.println(selectedImagePath);
-                else System.out.println("selectedImagePath is null");
-                if(filemanagerstring!=null)
-                    System.out.println(filemanagerstring);
-                else System.out.println("filemanagerstring is null");
+                Mynd.setImageBitmap(myBitmap);
 
-                //NOW WE HAVE OUR WANTED STRING
-                if(selectedImagePath!=null)
-                    System.out.println("selectedImagePath is the right one for you!");
-                else
-                    System.out.println("filemanagerstring is the right one for you!");
+                try {
+                    ExifInterface exif = new ExifInterface(selectedImageUri.getPath());
+                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    if(rotation==0)
+                        Mynd.setRotation(90);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
-    //UPDATED!
-    public String getPath(Uri uri) {
-    	Log.d("bla","1");
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Log.d("bla","2");
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        Log.d("bla","3");
-        if(cursor!=null)
-        {
-            //HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            //THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-            int column_index = cursor
-            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            Log.d("bla","4");
-            cursor.moveToFirst();
-            Log.d("bla","5");
-            return cursor.getString(column_index);
+
+
+    public String getRealPathFromURI(Uri contentUri) {
+            String[] projection = { MediaStore.MediaColumns.DATA };
+            @SuppressWarnings("deprecation")
+            Cursor cursor = managedQuery(contentUri, projection, null, null, null);
+            if (cursor != null) {
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } else
+                return null;
         }
-        else return null;
-    }
 
 
 
@@ -280,6 +275,25 @@ public class Form extends Activity {
 			label.setText(R.string.tyndistLabel);
 			lost=true;
 		}
+
+        List<String> feldir = new ArrayList<String>();
+        String[] tegundir = getResources().getStringArray(R.array.Feldir);
+        for(int i=0; i<tegundir.length;i++)
+        {
+            feldir.add(tegundir[i]);
+        }
+        ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, feldir);
+        adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        feldurSpinner.setAdapter(adapt);
+
+        List<String> feldslitir = new ArrayList<String>();
+        String[] litir = getResources().getStringArray(R.array.Litir);
+        for (int i = 0; i<litir.length;i++)
+            feldslitir.add(litir[i]);
+
+        adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, feldslitir);
+        adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        litirSpinner.setAdapter(adapt);
 	}
 	
 	/*
@@ -368,8 +382,7 @@ public class Form extends Activity {
 	public void skra(View view) throws JSONException
 	{
 		
-		
-		/*
+
 		Calendar c = Calendar.getInstance();
 		
 		int ar = c.get(Calendar.YEAR);
@@ -391,8 +404,7 @@ public class Form extends Activity {
 		new POST(auglysing).execute("http://tyndr.herokuapp.com/api/adverts");
 		
 		finish();
-		
-		*/
+
 	}
 	
 }
