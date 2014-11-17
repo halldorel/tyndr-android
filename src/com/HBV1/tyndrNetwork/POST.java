@@ -1,15 +1,11 @@
 package com.HBV1.tyndrNetwork;
 
-import java.io.InputStream;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONObject;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>

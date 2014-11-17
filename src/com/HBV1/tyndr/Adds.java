@@ -1,14 +1,5 @@
 package com.HBV1.tyndr;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,6 +16,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.HBV1.tyndrNetwork.GET;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>

@@ -2,8 +2,8 @@ package com.HBV1.tyndr;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
