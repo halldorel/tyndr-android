@@ -1,20 +1,18 @@
 package com.HBV1.tyndrNetwork;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.appspot.tyndr_server.tyndr.Tyndr;
+import com.appspot.tyndr_server.tyndr.model.MessagesAdvertMessage;
+import com.appspot.tyndr_server.tyndr.model.MessagesAdvertMessageCollection;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
 
 
 
@@ -29,37 +27,67 @@ import java.io.InputStreamReader;
 
 public class GET extends AsyncTask<String,Void,String>
 {
-
-
-    @Override
+	public static final JsonFactory jarvis = new AndroidJsonFactory();
+	public static final HttpTransport hoppy = AndroidHttp.newCompatibleTransport();
+	Tyndr.Builder tommi = new Tyndr.Builder(hoppy, jarvis, null);
+	
+	@SuppressWarnings("unchecked")
+	@Override
 	protected String doInBackground(String... arg0) {
+		tommi.setApplicationName("Tyndr");
+		Tyndr hallo = tommi.build();
+		MessagesAdvertMessageCollection guh = null;
+		try {
+			guh = hallo.advert().all(2).setLabel("lost_pets").execute();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		StringBuilder builder = new StringBuilder();
 
-		HttpClient tenging = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet("http://tyndr.herokuapp.com/api/adverts?filter[where]"+arg0[0]);
-		
-		
-		try {
-		      HttpResponse response = tenging.execute(httpGet);
-		      StatusLine statusLine = response.getStatusLine();
-		      int statusCode = statusLine.getStatusCode();
-		      if (statusCode == 200) {
-		        HttpEntity entity = response.getEntity();
-		        InputStream content = entity.getContent();
-		        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-		        String line;
-		        while ((line = reader.readLine()) != null) {
-		          builder.append(line);
-		        }
-		      } else {
-		        Log.d("GET", "Failed to download file");
-		      }
-		    } catch (ClientProtocolException e) {
-		      e.printStackTrace();
-		    } catch (IOException e) {
-		      e.printStackTrace();
-		    }
-			//Adds.setText(builder.toString());
-		    return builder.toString();
-		  }
+		ArrayList<MessagesAdvertMessage> heh = (ArrayList<MessagesAdvertMessage>) guh.get("items");
+		for (int i=0; i<heh.size(); i++) {
+			if (i!=0) {
+				builder.append(","+heh.get(i).toString());
+			} else {
+				builder.append(heh.get(i).toString());
+			}
+		}
+		String jo = "["+builder.toString()+"]";
+		Log.d("hallo",jo);
+
+		return jo;
+	}
+	
+//    @Override
+//	protected String doInBackground(String... arg0) {
+//		StringBuilder builder = new StringBuilder();
+//
+//		HttpClient tenging = new DefaultHttpClient();
+//		HttpGet httpGet = new HttpGet("http://tyndr.herokuapp.com/api/adverts?filter[where]"+arg0[0]);
+//		
+//		
+//		try {
+//		      HttpResponse response = tenging.execute(httpGet);
+//		      StatusLine statusLine = response.getStatusLine();
+//		      int statusCode = statusLine.getStatusCode();
+//		      if (statusCode == 200) {
+//		        HttpEntity entity = response.getEntity();
+//		        InputStream content = entity.getContent();
+//		        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+//		        String line;
+//		        while ((line = reader.readLine()) != null) {
+//		          builder.append(line);
+//		        }
+//		      } else {
+//		        Log.d("GET", "Failed to download file");
+//		      }
+//		    } catch (ClientProtocolException e) {
+//		      e.printStackTrace();
+//		    } catch (IOException e) {
+//		      e.printStackTrace();
+//		    }
+//			//Adds.setText(builder.toString());
+//		    return builder.toString();
+//		  }
 }
