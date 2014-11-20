@@ -60,6 +60,7 @@ public class GET extends AsyncTask<String,Void,String>
 		      e.printStackTrace();
 		    }
 			//Adds.setText(builder.toString());
+			Log.d("bla",builder.toString());
 		    return builder.toString();
 		  }
 }
