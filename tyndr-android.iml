@@ -15,6 +15,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="android-support-v4" level="project" />
     <orderEntry type="module" module-name="appcompat_v7" />
+    <orderEntry type="library" name="tyndr_server_appspot_com-tyndr-v1-20141107114951-java-1.19.0-sources" level="project" />
+    <orderEntry type="library" name="tyndr_server_appspot_com-tyndr-v1-20141104113138-java-1.19.0-sources" level="project" />
+    <orderEntry type="library" name="tyndr_server_appspot_com-tyndr-v1-20141104113138-java-1.19.0-sources (2)" level="project" />
   </component>
 </module>
 
