@@ -44,6 +44,7 @@ public class GET extends AsyncTask<String,Void,String>
 		}
 		StringBuilder builder = new StringBuilder();
 
+
 		ArrayList<MessagesAdvertMessage> heh = (ArrayList<MessagesAdvertMessage>) guh.get("items");
 		for (int i=0; i<heh.size(); i++) {
 			if (i!=0) {
@@ -53,38 +54,7 @@ public class GET extends AsyncTask<String,Void,String>
 			}
 		}
 		String jo = "["+builder.toString()+"]";
+
 		return jo;
 	}
-	
-//    @Override
-//	protected String doInBackground(String... arg0) {
-//		StringBuilder builder = new StringBuilder();
-//
-//		HttpClient tenging = new DefaultHttpClient();
-//		HttpGet httpGet = new HttpGet("http://tyndr.herokuapp.com/api/adverts?filter[where]"+arg0[0]);
-//		
-//		
-//		try {
-//		      HttpResponse response = tenging.execute(httpGet);
-//		      StatusLine statusLine = response.getStatusLine();
-//		      int statusCode = statusLine.getStatusCode();
-//		      if (statusCode == 200) {
-//		        HttpEntity entity = response.getEntity();
-//		        InputStream content = entity.getContent();
-//		        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-//		        String line;
-//		        while ((line = reader.readLine()) != null) {
-//		          builder.append(line);
-//		        }
-//		      } else {
-//		        Log.d("GET", "Failed to download file");
-//		      }
-//		    } catch (ClientProtocolException e) {
-//		      e.printStackTrace();
-//		    } catch (IOException e) {
-//		      e.printStackTrace();
-//		    }
-//			//Adds.setText(builder.toString());
-//		    return builder.toString();
-//		  }
 }

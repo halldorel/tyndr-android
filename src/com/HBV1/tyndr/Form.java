@@ -7,10 +7,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Geocoder;
+import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,7 +37,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -43,7 +53,7 @@ import java.util.List;
  */
 
 
-public class Form extends Activity {
+public class Form extends Activity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
 
 	
@@ -52,10 +62,8 @@ public class Form extends Activity {
     private boolean lost; // skrair hvort dyrid se tynt ed fundid
 	private final int dp_id = 23; // id sem dagaveljarinn faer
 	private final int SELECT_PICTURE = 1;
-    private String selectedImagePath;
-    //ADDED
-    private String filemanagerstring;
-	
+	LocationClient mLocationClient;
+	GoogleAccountCredential credential;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +95,36 @@ public class Form extends Activity {
 		upphafsstilla();
 		datepicker();
 		fyllaTegundir();
+		mLocationClient = new LocationClient(this, this, this);
+		
+		credential = GoogleAccountCredential.usingAudience(this,
+				   "server:client_id:tyndr-server.appspot.com");
 	
+	}
+	@Override
+    protected void onStart() {
+        super.onStart();
+        // Connect the client.
+    	mLocationClient.connect();
+    }
+	
+    @Override
+    protected void onStop() {
+        // Disconnecting the client invalidates it.
+        mLocationClient.disconnect();
+        super.onStop();
+    }
+	
+	void isConnectable()
+	{
+		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d("Location Updates","Google Play services is available.");
+            }
+        else
+        	Log.d("Location", "tengist ekki");
 	}
 	
     //UPDATED
@@ -380,10 +417,21 @@ public class Form extends Activity {
 	 * 
 	 *	@param view hluturinn sem kallar a fallid
 	 */
+	static final int REQUEST_ACCOUNT_PICKER = 2;
+
+	void chooseAccount() {
+	  startActivityForResult(credential.newChooseAccountIntent(),
+	    REQUEST_ACCOUNT_PICKER);
+	}
+
 	public void skra(View view) throws JSONException
 	{
+		Location temp = mLocationClient.getLastLocation();
+		Log.d("stadsetning", temp.toString());
+		Geocoder Leo = new Geocoder(this, Locale.getDefault());
 		
-
+		chooseAccount();
+		/*
 		Calendar c = Calendar.getInstance();
 		
 		int ar = c.get(Calendar.YEAR);
@@ -398,14 +446,36 @@ public class Form extends Activity {
 		auglysing.accumulate("reward","Nei");
 		auglysing.accumulate("description", "Tyndist/Fannst "+getDate());
 		auglysing.accumulate("location","-21.89541,64.13548");
-		auglysing.accumulate("resolved", false);
 		auglysing.accumulate("lost", lost);
 		auglysing.accumulate("name", nafn.getText().toString());
+		auglysing.accumulate("color", litirSpinner.getSelectedItem().toString());
+		auglysing.accumulate("species", tegundirSpinner.getSelectedItem().toString());
+		auglysing.accumulate("subspecies", undirtegundirSpinner.getSelectedItem().toString());
 		
-		new POST(auglysing).execute("http://tyndr.herokuapp.com/api/adverts");
+		new POST(auglysing).execute();
 		
 		finish();
+		*/
+	}
 
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		Log.d("tenging", "Galli");
+		
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+		Log.d("tenging", "Tengdist");
+		
+	}
+
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		Log.d("tenging", "aftengdist");
 	}
 	
 }
