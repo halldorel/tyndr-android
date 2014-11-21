@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.media.ExifInterface;
@@ -429,8 +430,27 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		Location temp = mLocationClient.getLastLocation();
 		Log.d("stadsetning", temp.toString());
 		Geocoder Leo = new Geocoder(this, Locale.getDefault());
-		
-		chooseAccount();
+		Address here = null;
+		Log.d("bla","1");
+		try {
+			here = (Address) Leo.getFromLocation(temp.getLatitude(), temp.getLongitude(), 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Log.d("bla","2");
+		String addressText = String.format(
+                "%s, %s, %s",
+                // If there's a street address, add it
+                here.getMaxAddressLineIndex() > 0 ?
+                        here.getAddressLine(0) : "",
+                // Locality is usually a city
+                here.getLocality(),
+                // The country of the address
+                here.getCountryName());
+		//chooseAccount();
+		Log.d("bla","3");
+		Log.d("stadsetning", addressText);
 		/*
 		Calendar c = Calendar.getInstance();
 		
