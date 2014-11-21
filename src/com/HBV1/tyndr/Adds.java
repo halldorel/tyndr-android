@@ -43,7 +43,7 @@ public class Adds extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.pet_list);
 		drawerNavigator = new DrawerNavigator(this);
-		drawerNavigator.setFinishActivity(false);
+		drawerNavigator.setFinishActivity(true);
 		
 		filterSpinner = (Spinner) findViewById(R.id.filter);
 		upphafsstilla();
@@ -190,6 +190,7 @@ public class Adds extends Activity {
 		}
 		
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
+		insertPoint.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Random rand = new Random();
 		for (int i=0; i<pets.size(); i++) {
