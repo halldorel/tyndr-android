@@ -171,6 +171,7 @@ public class Adds extends Activity {
 	 */
 	void fyllaLista() 
 	{
+		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		List<Pet> pets = new ArrayList<Pet>();
 		try {
 			JSONArray jerry = new JSONArray(auglysingar);
@@ -189,7 +190,8 @@ public class Adds extends Activity {
 			e.printStackTrace();
 		}
 		
-		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
+		insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
+		insertPoint.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Random rand = new Random();
 		for (int i=0; i<pets.size(); i++) {

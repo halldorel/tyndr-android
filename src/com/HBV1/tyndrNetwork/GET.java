@@ -38,7 +38,7 @@ public class GET extends AsyncTask<String,Void,String>
 		Tyndr hallo = tommi.build();
 		MessagesAdvertMessageCollection guh = null;
 		try {
-			guh = hallo.advert().all(2).setLabel("lost_pets").execute();
+			guh = hallo.advert().all(10).setLabel("lost_pets").execute();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,7 +55,6 @@ public class GET extends AsyncTask<String,Void,String>
 			}
 		}
 		String jo = "["+builder.toString()+"]";
-		Log.d("hallo",jo);
 
 		return jo;
 	}
