@@ -1,7 +1,9 @@
 package com.HBV1.tyndr;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
@@ -11,7 +13,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -137,7 +142,7 @@ public class Adds extends Activity {
 		case 1:
 			
 			try {
-				auglysingar = new GET().execute("[lost]=true").get();
+				auglysingar = new GET().execute("lost_pets").get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -150,7 +155,7 @@ public class Adds extends Activity {
 			
 		case 2:
 			try {
-				auglysingar = new GET().execute("[lost]=false").get();
+				auglysingar = new GET().execute("found_pets").get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -171,6 +176,8 @@ public class Adds extends Activity {
 	 */
 	void fyllaLista() 
 	{
+		if(auglysingar.length()<1) return;
+		
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		List<Pet> pets = new ArrayList<Pet>();
 		try {
@@ -211,5 +218,54 @@ public class Adds extends Activity {
 			}
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 		}
+	}
+	
+	public String getGeoLocation(double lat, double lon)
+	{
+		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+		List<Address> addresses = null;
+		
+		try {
+			addresses = geocoder.getFromLocation(lat,
+                    lon, 1);
+		}             
+		catch (IOException e1) {
+            Log.e("LocationSampleActivity",
+                    "IO Exception in getFromLocation()");
+            e1.printStackTrace();
+            
+            } 
+		catch (IllegalArgumentException e2) {
+            // Error message to post in the log
+            String errorString = "Illegal arguments " +
+                    Double.toString(lat) +
+                    " , " +
+                    Double.toString(lon) +
+                    " passed to address service";
+            Log.e("LocationSampleActivity", errorString);
+            e2.printStackTrace();
+            }
+		if (addresses != null && addresses.size() > 0) {
+            // Get the first address
+            Address address = addresses.get(0);
+            /*
+             * Format the first line of address (if available),
+             * city, and country name.
+             */
+            String addressText = String.format(
+                    "%s, %s, %s",
+                    // If there's a street address, add it
+                    address.getMaxAddressLineIndex() > 0 ?
+                            address.getAddressLine(0) : "",
+                    // Locality is usually a city
+                    address.getLocality(),
+                    // The country of the address
+                    address.getCountryName());
+            // Return the text
+            return "near " +addressText;
+        } else {
+            return "othekkt";
+        }
+
 	}
 }

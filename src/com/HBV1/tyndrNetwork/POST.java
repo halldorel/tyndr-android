@@ -32,13 +32,13 @@ public class POST extends AsyncTask<String, Void, Void>
 	public static final HttpTransport hoppy = AndroidHttp.newCompatibleTransport();
 	Tyndr.Builder tommi = new Tyndr.Builder(hoppy, jarvis, null);
 	
-	private JSONObject msg; // skilabodin sem a ad senda
+	private MessagesCreateAdvertMessage msg; // skilabodin sem a ad senda
 	/*
 	 * byr til nytt instance ad POST
 	 * 
 	 * @param json hlutur sem inniheldur skilabodin sem a ad senda
 	 */
-	public POST(JSONObject message)
+	public POST(MessagesCreateAdvertMessage message)
 	{
 		msg = message;
 	}
@@ -48,32 +48,14 @@ public class POST extends AsyncTask<String, Void, Void>
 		tommi.setApplicationName("Tyndr");
 		Tyndr hallo = tommi.build();
 		
-		MessagesCreateAdvertMessage newAdd = new MessagesCreateAdvertMessage();
-		
-
-		
+	
 		try {
-			newAdd.setAge((long) 10);
-			newAdd.setDescription((String) msg.get("description"));
-			newAdd.setName(msg.getString("name"));
-			newAdd.setColor(msg.getString("color"));
-			newAdd.setSpecies(msg.getString("species"));
-			newAdd.setSubspecies(msg.getString("subspecies"));
-			if(msg.getBoolean("lost"))
-				newAdd.setLabel("lost_pets");
-			else
-				newAdd.setLabel("found_pets");
-
-			hallo.advert().create(newAdd).execute();
-			
-			Log.d("bla", "sent");
+			hallo.advert().create(msg).execute();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+			
 		
 		return null;
 	} 

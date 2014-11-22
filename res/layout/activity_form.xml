@@ -208,6 +208,30 @@
                 android:layout_height="wrap_content"
                 />
         </LinearLayout>
+        
+               	<LinearLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="0dp"
+	                android:layout_weight="1"
+	                android:orientation="vertical">
+
+	                <TextView
+	                    android:id="@+id/lysingLabel"
+	                    android:layout_width="wrap_content"
+	                    android:layout_height="wrap_content"
+	                    android:text="@string/nafnLabel" />
+	
+	                <EditText
+	                    android:id="@+id/lysing"
+	                    android:layout_width="match_parent"
+	                    android:inputType="textMultiLine"
+	                    android:layout_height="wrap_content"
+	                    android:maxLines="10"
+	                    android:lines="8"
+	                    android:gravity="top|start"
+	                    android:layout_margin="@dimen/editText_margin"> 
+	                </EditText>
+            </LinearLayout>
 
 
         <Button
