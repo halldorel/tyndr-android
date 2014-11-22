@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -28,24 +26,17 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.HBV1.tyndrNetwork.POST;
-
 import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-
 import com.appspot.tyndr_server.tyndr.model.MessagesCreateAdvertMessage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 /*
@@ -446,6 +437,8 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		newAdd.setColor(litirSpinner.getSelectedItem().toString());
 		newAdd.setSpecies(tegundirSpinner.getSelectedItem().toString());
 		newAdd.setSubspecies(undirtegundirSpinner.getSelectedItem().toString());
+		newAdd.setLat(loc.getLatitude() + "");
+		newAdd.setLon(loc.getLongitude() + "");
 		if(lost)
 			newAdd.setLabel("lost_pets");
 		else

@@ -18,10 +18,12 @@ public class Pet {
 	final public String name;
 	final public String location;
 	final public String description;
+	final public String id;
 	
-	public Pet(String name, String location, String description) {
+	public Pet(String name, String location, String description, String id) {
 		this.name = name;
 		this.location = location;
 		this.description = description;
+		this.id = id;
 	}
 }
