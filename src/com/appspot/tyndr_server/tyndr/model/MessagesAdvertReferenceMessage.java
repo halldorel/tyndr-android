@@ -19,8 +19,8 @@
 package com.appspot.tyndr_server.tyndr.model;
 
 /**
- * Passes status to front end when operation should not return another value. Author: Kristjan
- * Eldjarn Hjorleifsson, keh4@hi.is
+ * Passes an advert's reference number to the endpoint Author: Kristjan Eldjarn Hjorleifsson,
+ * keh4@hi.is
  *
  * <p> This is the Java data model class that specifies how to parse/serialize into the JSON that is
  * transmitted over HTTP when working with the tyndr. For a detailed explanation see:
@@ -30,37 +30,37 @@ package com.appspot.tyndr_server.tyndr.model;
  * @author Google, Inc.
  */
 @SuppressWarnings("javadoc")
-public final class MessagesStatusMessage extends com.google.api.client.json.GenericJson {
+public final class MessagesAdvertReferenceMessage extends com.google.api.client.json.GenericJson {
 
   /**
    * The value may be {@code null}.
    */
   @com.google.api.client.util.Key
-  private java.lang.String message;
+  private java.lang.String reference;
 
   /**
    * @return value or {@code null} for none
    */
-  public java.lang.String getMessage() {
-    return message;
+  public java.lang.String getReference() {
+    return reference;
   }
 
   /**
-   * @param message message or {@code null} for none
+   * @param reference reference or {@code null} for none
    */
-  public MessagesStatusMessage setMessage(java.lang.String message) {
-    this.message = message;
+  public MessagesAdvertReferenceMessage setReference(java.lang.String reference) {
+    this.reference = reference;
     return this;
   }
 
   @Override
-  public MessagesStatusMessage set(String fieldName, Object value) {
-    return (MessagesStatusMessage) super.set(fieldName, value);
+  public MessagesAdvertReferenceMessage set(String fieldName, Object value) {
+    return (MessagesAdvertReferenceMessage) super.set(fieldName, value);
   }
 
   @Override
-  public MessagesStatusMessage clone() {
-    return (MessagesStatusMessage) super.clone();
+  public MessagesAdvertReferenceMessage clone() {
+    return (MessagesAdvertReferenceMessage) super.clone();
   }
 
 }
