@@ -294,7 +294,7 @@ public class Adds extends Activity {
                     // The country of the address
                     address.getCountryName());
             // Return the text
-            return "near " +addressText;
+            return "nalaegt " +addressText;
         } else {
             return "othekkt";
         }
