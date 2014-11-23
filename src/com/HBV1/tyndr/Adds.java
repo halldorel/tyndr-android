@@ -11,8 +11,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Gravity;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -21,11 +25,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,6 +49,13 @@ public class Adds extends Activity {
 	private Spinner filterSpinner; //Spinner hlutur
 	private String auglysingar; // geymir svarid fra servernum.
 	private DrawerNavigator drawerNavigator;
+	private PopupWindow popupWindow;
+	private OnClickListener clicky;
+	private Button popButton;
+	private LinearLayout popLayout;
+	private View addsView;
+	private View lastPetPopup = null;
+
 	
 	
 	@Override
@@ -49,10 +64,33 @@ public class Adds extends Activity {
 		setContentView(R.layout.pet_list);
 		drawerNavigator = new DrawerNavigator(this);
 		drawerNavigator.setFinishActivity(true);
-		
+		addsView = this.findViewById(android.R.id.content);
 		filterSpinner = (Spinner) findViewById(R.id.filter);
+		createPop();
 		upphafsstilla();
 		
+		clicky = new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if (lastPetPopup != null) {
+					lastPetPopup.setBackgroundColor(0x00000000);
+				}
+				arg0.setBackgroundColor(Color.CYAN);
+				lastPetPopup = arg0;
+//				popupWindow.showAsDropDown(arg0);
+				popupWindow.showAtLocation(addsView, Gravity.CENTER, 0, 0);
+				popButton = (Button) popLayout.findViewById(R.id.popup_skra);
+//				popButton.setOnClickListener(new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						lastPetPopup.setBackgroundColor(0x00000000);
+//						popupWindow.dismiss();
+//					}
+//				});
+
+			}
+		};
 		
 		try {
 			auglysingar = new GET().execute("").get();
@@ -64,6 +102,17 @@ public class Adds extends Activity {
 			e.printStackTrace();
 		}
 		fyllaLista();
+
+	}
+	
+	private void createPop() {
+		popLayout = new LinearLayout(this);
+		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View view = inflater.inflate(R.layout.pet_list_popup, popLayout, false);
+		popupWindow = new PopupWindow(popLayout, LayoutParams.MATCH_PARENT,
+				LayoutParams.WRAP_CONTENT);
+		popupWindow.setContentView(view);
+		popupWindow.setFocusable(true);
 
 	}
 
@@ -212,6 +261,7 @@ public class Adds extends Activity {
 		Random rand = new Random();
 		for (int i=0; i<pets.size(); i++) {
 			View view = inflater.inflate(R.layout.pet_list_item, insertPoint, false);
+			view.setOnClickListener(clicky);
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);

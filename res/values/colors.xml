@@ -2,4 +2,5 @@
 <resources>
     <item name="bleikur" type="color">#CA5ABE</item>
     <item name="svartur" type="color">#000000</item>
+    <item name="hvitur" type="color">#FFFFFF</item>
 </resources>
