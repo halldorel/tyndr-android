@@ -235,11 +235,21 @@ public class Adds extends Activity {
 			for(int i = 0; i<jerry.length();i++)
 			{
 				JSONObject newPet = (JSONObject) jerry.get(i);
+				String location = getGeoLocation(64.12612612612612, -21.924272886361027);
+				try{
+					location = getGeoLocation(
+							Double.parseDouble(newPet.getString("lat")),
+							Double.parseDouble(newPet.getString("lon")));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				pets.add( new Pet(
 						newPet.getString("name"),
-						"omglol",
-//						newPet.getString("location"),
-						newPet.getString("description")));
+						location,
+						newPet.getString("description"),
+						newPet.getString("id")));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
