@@ -32,12 +32,12 @@ public class GET extends AsyncTask<String,Void,String>
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	protected String doInBackground(String... arg0) {
+	protected String doInBackground(String... args) {
 		tommi.setApplicationName("Tyndr");
 		Tyndr hallo = tommi.build();
 		MessagesAdvertMessageCollection guh = null;
 		try {
-			guh = hallo.advert().all(10).setLabel("lost_pets").execute();
+			guh = hallo.advert().all(10).setLabel(args[0]).execute();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

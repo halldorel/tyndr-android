@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import com.appspot.tyndr_server.tyndr.model.MessagesCreateAdvertMessage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -60,6 +61,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	
 	private Spinner tegundirSpinner, kynSpinner, undirtegundirSpinner, feldurSpinner, litirSpinner; // spinner hlutir i vidmotinu
     ImageView Mynd;
+    TextView Nafn, Aldur, Lysing;
     private boolean lost; // skrair hvort dyrid se tynt ed fundid
 	private final int dp_id = 23; // id sem dagaveljarinn faer
 	private final int SELECT_PICTURE = 1;
@@ -72,6 +74,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		setContentView(R.layout.activity_form);
 		
 		Mynd = (ImageView) findViewById(R.id.mynd);
+		Nafn = (TextView) findViewById(R.id.nafn);
+		Aldur = (TextView) findViewById(R.id.aldur);
+		Lysing = (TextView) findViewById(R.id.lysing);
 		
 		Mynd.setOnClickListener(new OnClickListener(){
 
@@ -98,14 +103,16 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		fyllaTegundir();
 		mLocationClient = new LocationClient(this, this, this);
 		
-		credential = GoogleAccountCredential.usingAudience(this,
-				   "server:client_id:tyndr-server.appspot.com");
+		//credential = GoogleAccountCredential.usingAudience(this,
+		//		   "server:client_id:tyndr-server.appspot.com");
 	
 	}
+	
 	@Override
     protected void onStart() {
         super.onStart();
         // Connect the client.
+ 
     	mLocationClient.connect();
     }
 	
@@ -118,6 +125,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	
 	void isConnectable()
 	{
+		
 		int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
@@ -126,6 +134,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
             }
         else
         	Log.d("Location", "tengist ekki");
+        	
 	}
 	
     //UPDATED
@@ -419,38 +428,29 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	 *	@param view hluturinn sem kallar a fallid
 	 */
 	static final int REQUEST_ACCOUNT_PICKER = 2;
-
+	
 	void chooseAccount() {
 	  startActivityForResult(credential.newChooseAccountIntent(),
 	    REQUEST_ACCOUNT_PICKER);
 	}
-
+	
 	public void skra(View view) throws JSONException
 	{
-		Location temp = mLocationClient.getLastLocation();
-		Log.d("stadsetning", temp.toString());
-		Geocoder Leo = new Geocoder(this, Locale.getDefault());
-		Address here = null;
-		Log.d("bla","1");
-		try {
-			here = (Address) Leo.getFromLocation(temp.getLatitude(), temp.getLongitude(), 1);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Log.d("bla","2");
-		String addressText = String.format(
-                "%s, %s, %s",
-                // If there's a street address, add it
-                here.getMaxAddressLineIndex() > 0 ?
-                        here.getAddressLine(0) : "",
-                // Locality is usually a city
-                here.getLocality(),
-                // The country of the address
-                here.getCountryName());
+		
+		Location loc = mLocationClient.getLastLocation();
 		//chooseAccount();
-		Log.d("bla","3");
-		Log.d("stadsetning", addressText);
+		MessagesCreateAdvertMessage newAdd = new MessagesCreateAdvertMessage();
+		newAdd.setAge((long) Integer.parseInt(Aldur.getText().toString()));
+		newAdd.setDescription(Lysing.getText().toString());
+		newAdd.setName(Nafn.getText().toString());
+		newAdd.setColor(litirSpinner.getSelectedItem().toString());
+		newAdd.setSpecies(tegundirSpinner.getSelectedItem().toString());
+		newAdd.setSubspecies(undirtegundirSpinner.getSelectedItem().toString());
+		if(lost)
+			newAdd.setLabel("lost_pets");
+		else
+			newAdd.setLabel("found_pets");
+		
 		/*
 		Calendar c = Calendar.getInstance();
 		
@@ -460,22 +460,10 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		
 		String manudur = String.format("%02d", manudurInt+1);
 		String iDag = new StringBuilder().append(ar).append("-").append(manudur).append("-").append(dagur).append("T17:40:13.467Z").toString();
-		TextView nafn = (TextView) findViewById(R.id.nafn);
-		JSONObject auglysing = new JSONObject();
-		auglysing.accumulate("created_at", iDag);
-		auglysing.accumulate("reward","Nei");
-		auglysing.accumulate("description", "Tyndist/Fannst "+getDate());
-		auglysing.accumulate("location","-21.89541,64.13548");
-		auglysing.accumulate("lost", lost);
-		auglysing.accumulate("name", nafn.getText().toString());
-		auglysing.accumulate("color", litirSpinner.getSelectedItem().toString());
-		auglysing.accumulate("species", tegundirSpinner.getSelectedItem().toString());
-		auglysing.accumulate("subspecies", undirtegundirSpinner.getSelectedItem().toString());
-		
-		new POST(auglysing).execute();
-		
-		finish();
 		*/
+		
+		new POST(newAdd).execute();
+		finish();
 	}
 
 	@Override
