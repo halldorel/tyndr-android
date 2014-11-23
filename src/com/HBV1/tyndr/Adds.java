@@ -187,18 +187,19 @@ public class Adds extends Activity {
 			{
 				JSONObject newPet = (JSONObject) jerry.get(i);
 				String location = getGeoLocation(64.12612612612612, -21.924272886361027);
+				/*
 				try{
 					location = getGeoLocation(
-							Double.parseDouble(newPet.getString("lat")),
-							Double.parseDouble(newPet.getString("lon")));
+							newPet.getDouble("lat"),
+							newPet.getDouble("lon"));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				*/
 				pets.add( new Pet(
 						newPet.getString("name"),
-						location,
+						"omglol",
 						newPet.getString("description"),
 						newPet.getString("id")));
 			}
@@ -206,7 +207,6 @@ public class Adds extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		insertPoint.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		Random rand = new Random();

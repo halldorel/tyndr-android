@@ -1,9 +1,11 @@
 package com.HBV1.tyndr;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +13,9 @@ import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,12 +36,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import com.appspot.tyndr_server.tyndr.Tyndr;
 import com.appspot.tyndr_server.tyndr.model.MessagesCreateAdvertMessage;
+import com.appspot.tyndr_server.tyndr.model.MessagesStatusMessage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -58,6 +69,12 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	private final int SELECT_PICTURE = 1;
 	LocationClient mLocationClient;
 	GoogleAccountCredential credential;
+	Tyndr hallo;
+	public static final JsonFactory jarvis = new AndroidJsonFactory();
+	public static final HttpTransport hoppy = AndroidHttp.newCompatibleTransport();
+	
+	String accountName;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +85,11 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		Nafn = (TextView) findViewById(R.id.nafn);
 		Aldur = (TextView) findViewById(R.id.aldur);
 		Lysing = (TextView) findViewById(R.id.lysing);
+		credential = GoogleAccountCredential.usingAudience(this,
+				   "server:client_id:259192441078-gmov6a7cj5dbg8ikdgkdalht3vuevs00.apps.googleusercontent.com");
 		
+		
+
 		Mynd.setOnClickListener(new OnClickListener(){
 
 			@Override
@@ -94,9 +115,8 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		fyllaTegundir();
 		mLocationClient = new LocationClient(this, this, this);
 		
-		//credential = GoogleAccountCredential.usingAudience(this,
-		//		   "server:client_id:tyndr-server.appspot.com");
-	
+		Tyndr.Builder tommi = new Tyndr.Builder(hoppy, jarvis, credential);
+		hallo = tommi.build();
 	}
 	
 	@Override
@@ -131,24 +151,39 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
     //UPDATED
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                Uri selectedImageUri = data.getData();
-                String bla = getRealPathFromURI(selectedImageUri);
-                Bitmap myBitmap = BitmapFactory.decodeFile(bla);
+        	switch (requestCode) {
+	            case REQUEST_ACCOUNT_PICKER:
+	               if (data != null && data.getExtras() != null) {
+	
+	               accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+	               if (accountName != null) {
+	                  credential.setSelectedAccountName(accountName);
+	               }
+	            }
+	            break;
+	            
+	            case SELECT_PICTURE:
+	            	Uri selectedImageUri = data.getData();
+	                String bla = getRealPathFromURI(selectedImageUri);
+	                Bitmap mBitmap = BitmapFactory.decodeFile(bla);
 
-                Mynd.setImageBitmap(myBitmap);
+	                Mynd.setImageBitmap(mBitmap);
 
-                try {
-                    ExifInterface exif = new ExifInterface(selectedImageUri.getPath());
-                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    if(rotation==0)
-                        Mynd.setRotation(90);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+	                try {
+	                    ExifInterface exif = new ExifInterface(selectedImageUri.getPath());
+	                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	                    if(rotation==0)
+	                        Mynd.setRotation(90);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                }
+
+	                break;
+	         }
+                
             }
         }
-    }
+
 
 
 
@@ -299,7 +334,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void upphafsstilla()
 	{
 		String titill = getIntent().getStringExtra("titill");
-		
+		chooseAccount();
 		if (titill.equals("fundid"))
 		{
 			setTitle(getResources().getString(R.string.fundidTitle));
@@ -428,8 +463,14 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void skra(View view) throws JSONException
 	{
 		
+		Log.d("bla", "1");
+		
+		Log.d("bla", credential.getSelectedAccountName().toString());
+		
+		
+
+		
 		Location loc = mLocationClient.getLastLocation();
-		//chooseAccount();
 		MessagesCreateAdvertMessage newAdd = new MessagesCreateAdvertMessage();
 		newAdd.setAge((long) Integer.parseInt(Aldur.getText().toString()));
 		newAdd.setDescription(Lysing.getText().toString());
@@ -437,14 +478,13 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		newAdd.setColor(litirSpinner.getSelectedItem().toString());
 		newAdd.setSpecies(tegundirSpinner.getSelectedItem().toString());
 		newAdd.setSubspecies(undirtegundirSpinner.getSelectedItem().toString());
-		newAdd.setLat(loc.getLatitude() + "");
-		newAdd.setLon(loc.getLongitude() + "");
+		newAdd.setLat(loc.getLatitude());
+		newAdd.setLon(loc.getLongitude());
 		if(lost)
 			newAdd.setLabel("lost_pets");
 		else
 			newAdd.setLabel("found_pets");
-		
-		/*
+
 		Calendar c = Calendar.getInstance();
 		
 		int ar = c.get(Calendar.YEAR);
@@ -453,10 +493,11 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		
 		String manudur = String.format("%02d", manudurInt+1);
 		String iDag = new StringBuilder().append(ar).append("-").append(manudur).append("-").append(dagur).append("T17:40:13.467Z").toString();
-		*/
 		
-		new POST(newAdd).execute();
+		
+		new POST(newAdd, credential).execute();
 		finish();
+
 	}
 
 	@Override
