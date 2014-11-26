@@ -8,8 +8,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -17,6 +20,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +37,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.HBV1.tyndrNetwork.POST;
 import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,7 +80,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public static final JsonFactory jarvis = new AndroidJsonFactory();
 	public static final HttpTransport hoppy = AndroidHttp.newCompatibleTransport();
 	
-	String accountName;
+	String accountName, BaseMynd;
 	
 
 	@Override
@@ -181,13 +187,28 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	                } catch (IOException e) {
 	                    e.printStackTrace();
 	                }
-	                
-	                Mynd.setImageBitmap(rotateBitmap(mBitmap,rotation));
+	                mBitmap = rotateBitmap(mBitmap,rotation);
+	                mBitmap =  scaleDown(mBitmap,300,true);
+	                Log.d("size",mBitmap.getByteCount() + "");
+	                BaseMynd = encodeTobase64(mBitmap);
+	                Mynd.setImageBitmap(mBitmap);
 	                break;
 	         }
                 
             }
         }
+    
+    public static String encodeTobase64(Bitmap image)
+    {
+        Bitmap immagex=image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();  
+        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+
+        Log.e("LOOK", imageEncoded);
+        return imageEncoded;
+    }
     
     /*
      * Fengið að láni frá stackoverflow, snýr mynndum rétt.
@@ -235,7 +256,19 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		    return null;
 		}
     }
+    
+    public static Bitmap scaleDown(Bitmap realImage, float maxImageSize,
+            boolean filter) {
+        float ratio = Math.min(
+                (float) maxImageSize / realImage.getWidth(),
+                (float) maxImageSize / realImage.getHeight());
+        int width = Math.round((float) ratio * realImage.getWidth());
+        int height = Math.round((float) ratio * realImage.getHeight());
 
+        Bitmap newBitmap = Bitmap.createScaledBitmap(realImage, width,
+                height, filter);
+        return newBitmap;
+    }
 
 
     public String getRealPathFromURI(Uri contentUri) {
@@ -516,14 +549,6 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	
 	public void skra(View view) throws JSONException
 	{
-		
-		Log.d("bla", "1");
-		
-		Log.d("bla", credential.getSelectedAccountName().toString());
-		
-		
-
-		
 		Location loc = mLocationClient.getLastLocation();
 		MessagesCreateAdvertMessage newAdd = new MessagesCreateAdvertMessage();
 		newAdd.setAge((long) Integer.parseInt(Aldur.getText().toString()));
@@ -534,6 +559,7 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		newAdd.setSubspecies(undirtegundirSpinner.getSelectedItem().toString());
 		newAdd.setLat(loc.getLatitude());
 		newAdd.setLon(loc.getLongitude());
+		newAdd.setImageString(BaseMynd);
 		if(lost)
 			newAdd.setLabel("lost_pets");
 		else

@@ -50,19 +50,40 @@
             android:textColor="@color/svartur"
             android:textSize="18dp" />
 
-        <Button
-            android:id="@+id/popup_skra"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/button_margin"
-            android:background="@drawable/button"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="sans-serif"
-            android:text="@string/skra"
-            android:textColor="#FFFFFFFF"
-            android:textSize="16dip"
-            android:textStyle="bold" />
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal" >
+
+		    <Button
+	            android:id="@+id/popup_fundid"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="@dimen/button_margin"
+	            android:background="@drawable/button"
+	            android:clickable="true"
+	            android:focusable="true"
+	            android:fontFamily="sans-serif"
+	            android:text="@string/skra"
+	            android:textColor="#FFFFFFFF"
+	            android:textSize="16dip"
+	            android:textStyle="bold"
+	            android:layout_weight="1" />
+        	<Button
+	            android:id="@+id/popup_skra"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="@dimen/button_margin"
+	            android:background="@drawable/button"
+	            android:clickable="true"
+	            android:focusable="true"
+	            android:fontFamily="sans-serif"
+	            android:text="@string/skra"
+	            android:textColor="#FFFFFFFF"
+	            android:textSize="16dip"
+	            android:textStyle="bold"
+	            android:layout_weight="1"  />
+       	</LinearLayout>
     </LinearLayout>
 
 </ScrollView>
