@@ -3,6 +3,8 @@ package com.HBV1.tyndr;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 		View view = inflater.inflate(R.layout.pet_list_popup, popLayout, false);
 		popLayout.addView(view);
 		((Button) popLayout.findViewById(R.id.popup_skra)).setOnClickListener(this);
+		((Button) popLayout.findViewById(R.id.popup_loka)).setOnClickListener(this);
 		setContentView(popLayout);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -44,6 +47,7 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
+		case R.id.popup_loka: svara();
 		case R.id.popup_skra: dismiss(); dimmer.getForeground().setAlpha( 0) ; break;
 		default: fyllaPopup(view); dimmer.getForeground().setAlpha(160);
 		}
@@ -56,5 +60,13 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 		((TextView) popLayout.findViewById(R.id.popup_stadur)).setText(pet.getLocation());
 		((TextView) popLayout.findViewById(R.id.popup_lysing)).setText(pet.getDescription());
 		showAtLocation(parent.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
+	}
+	
+	public void svara()
+	{
+		Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+	            "mailto","abc@gmail.com", null));
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "EXTRA_SUBJECT");
+		parent.startActivity(Intent.createChooser(emailIntent, "Send email..."));
 	}
 }
