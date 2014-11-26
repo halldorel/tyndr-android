@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -165,25 +166,75 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	            case SELECT_PICTURE:
 	            	Uri selectedImageUri = data.getData();
 	                String bla = getRealPathFromURI(selectedImageUri);
-	                Bitmap mBitmap = BitmapFactory.decodeFile(bla);
+	                BitmapFactory.Options options = new BitmapFactory.Options();
+	                options.inSampleSize = 4;
+	                Bitmap mBitmap = BitmapFactory.decodeFile(bla,options);
 
-	                Mynd.setImageBitmap(mBitmap);
-
+	                
+	                int rotation = 0;
 	                try {
-	                    ExifInterface exif = new ExifInterface(selectedImageUri.getPath());
-	                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	                    ExifInterface exif = new ExifInterface(bla);
+	                    rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+	                    Log.d("bla",Integer.toString(rotation));
 	                    if(rotation==0)
 	                        Mynd.setRotation(90);
 	                } catch (IOException e) {
 	                    e.printStackTrace();
 	                }
-
+	                
+	                Mynd.setImageBitmap(rotateBitmap(mBitmap,rotation));
 	                break;
 	         }
                 
             }
         }
+    
+    /*
+     * Fengið að láni frá stackoverflow, snýr mynndum rétt.
+     */
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
+        Matrix matrix = new Matrix();
+		switch (orientation) {
+		    case ExifInterface.ORIENTATION_NORMAL:
+		        return bitmap;
+		    case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+		        matrix.setScale(-1, 1);
+		        break;
+		    case ExifInterface.ORIENTATION_ROTATE_180:
+		        matrix.setRotate(180);
+		        break;
+		    case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+		        matrix.setRotate(180);
+		        matrix.postScale(-1, 1);
+		        break;
+		    case ExifInterface.ORIENTATION_TRANSPOSE:
+		        matrix.setRotate(90);
+		        matrix.postScale(-1, 1);
+		        break;
+		   case ExifInterface.ORIENTATION_ROTATE_90:
+		       matrix.setRotate(90);
+		       break;
+		   case ExifInterface.ORIENTATION_TRANSVERSE:
+		       matrix.setRotate(-90);
+		       matrix.postScale(-1, 1);
+		       break;
+		   case ExifInterface.ORIENTATION_ROTATE_270:
+		       matrix.setRotate(-90);
+		       break;
+		   default:
+		       return bitmap;
+		}
+		try {
+		    Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+		    bitmap.recycle();
+		    return bmRotated;
+		}
+		catch (OutOfMemoryError e) {
+		    e.printStackTrace();
+		    return null;
+		}
+    }
 
 
 
@@ -227,13 +278,14 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	 */
 	public void fyllaTegundir()
 	{
+
 		List<String> tegundir = new ArrayList<String>();
-		tegundir.add("Veldu:");
-		tegundir.add("Hundur"); //pos 1
-		tegundir.add("Kisi"); // pos 2
-		tegundir.add("Hestur"); // pos 3
-		tegundir.add("Belja"); // pos 4
-		
+		tegundir.add("Veldu tegund");
+        String[] tegund = getResources().getStringArray(R.array.Dyr);
+        for(int i=0; i<tegund.length;i++)
+        {
+            tegundir.add(tegund[i]);
+        }
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		tegundirSpinner.setAdapter(adapt);
@@ -258,28 +310,30 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void fyllaKyn(int tegund)
 	{
 		List<String> kyn = new ArrayList<String>();
-		
+		String[] kynid = null;
 		switch(tegund){
 			case 1:
-				kyn.add("Rakki");
-				kyn.add("Tik");
+				kynid = getResources().getStringArray(R.array.HundaKyn);
 				break;
 			case 2:
-				kyn.add("Fress");
-				kyn.add("Laeda");
+				kynid = getResources().getStringArray(R.array.KattarKyn);
 				break;
 			case 3:
-				kyn.add("Hross");
-				kyn.add("Hryssa");
+				kynid = getResources().getStringArray(R.array.HestaKyn);
 				break;
 			case 4:
-				kyn.add("Naut");
-				kyn.add("Kyr");
+				kynid = getResources().getStringArray(R.array.KuaKyn);
+				break;
+			case 5:
+				kynid = getResources().getStringArray(R.array.KindaKyn);
 				break;
 			default:
-				kyn.add("Veldu tegund");
+				kynid = new String[1];
+				kynid[0] = "Veldu tegund";
 		}
 		
+		for(int i = 0; i<kynid.length;i++)
+			kyn.add(kynid[i]);
 		if (tegund!=0)
 			kyn.add("Veit ekki");
 		
@@ -296,28 +350,28 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void fyllaUndirtegund(int tegund)
 	{
 		List<String> undirtegund = new ArrayList<String>();
+		String[] UT = new String[3];
 		
 		switch(tegund){
 			case 1:
-				undirtegund.add("Puddel");
-				undirtegund.add("Great Dane");
-				undirtegund.add("Blendingur");
+				UT = getResources().getStringArray(R.array.HundaUndirtegundir);
 				break;
 			case 2:
-				undirtegund.add("Ljon");
-				undirtegund.add("American Bobtail");
+				UT = getResources().getStringArray(R.array.KattaUndirtegundir);
 				break;
 			case 3:
-				undirtegund.add("Islenskur");
-				undirtegund.add("Utlenskur");
-				break;
+
 			case 4:
-				undirtegund.add("Mjolkur Ku");
-				undirtegund.add("Villtur");
+
+			case 5:
+				UT = getResources().getStringArray(R.array.AdrarUndirtegundir);
 				break;
 			default:
-				undirtegund.add("Veldu tegund");
+				UT = new String[1];
+				UT[0] = "Veldu Tegund";
 		}
+		for(int i=0; i<UT.length;i++)
+			undirtegund.add(UT[i]);
 		if (tegund!=0)
 			undirtegund.add("Veit ekki");
 		

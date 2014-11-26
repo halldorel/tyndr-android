@@ -98,7 +98,6 @@ public class Adds extends Activity {
 	public void upphafsstilla()
 	{
 		List<String> tegundir = new ArrayList<String>();
-		tegundir.add("Allar");
 		tegundir.add("Tynd");
 		tegundir.add("fundin"); 
 		
@@ -129,20 +128,6 @@ public class Adds extends Activity {
 		{
 		case 0:
 			try {
-				auglysingar = new GET().execute("").get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			fyllaLista();
-				break;
-				
-		case 1:
-			
-			try {
 				auglysingar = new GET().execute("lost_pets").get();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
@@ -154,7 +139,7 @@ public class Adds extends Activity {
 			fyllaLista();
 			break;
 			
-		case 2:
+		case 1:
 			try {
 				auglysingar = new GET().execute("found_pets").get();
 			} catch (InterruptedException e) {
@@ -187,8 +172,7 @@ public class Adds extends Activity {
 			for(int i = 0; i<jerry.length();i++)
 			{
 				JSONObject newPet = (JSONObject) jerry.get(i);
-				String location = getGeoLocation(64.12612612612612, -21.924272886361027);
-				/*
+				String location = null;
 				try{
 					location = getGeoLocation(
 							newPet.getDouble("lat"),
@@ -197,10 +181,9 @@ public class Adds extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				*/
 				pets.add( new Pet(
 						newPet.getString("name"),
-						"omglol",
+						location,
 						newPet.getString("description"),
 						newPet.getString("id")));
 			}
@@ -306,7 +289,7 @@ public class Adds extends Activity {
                     // The country of the address
                     address.getCountryName());
             // Return the text
-            return "near " +addressText;
+            return "nalaegt " +addressText;
         } else {
             return "othekkt";
         }

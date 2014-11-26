@@ -46,5 +46,63 @@
         <item>Hvítur</item>
         <item>Hrossaskítur</item>
     </string-array>
+    
+    <string-array name="Dyr">
+        <item>Hundur</item>
+        <item>Köttur</item>
+        <item>Hestur</item>
+        <item>Kýr</item>
+        <item>Kind</item>
+    </string-array>
+	
+    <string-array name="HundaKyn">
+        <item>Hundur</item>
+        <item>Tík</item>
+    </string-array>
+    
+    <string-array name="KattarKyn">
+        <item>Fress</item>
+        <item>Læða</item>
+    </string-array>
+    
+    <string-array name="HestaKyn">
+        <item>Foli</item>
+        <item>Hryssa</item>
+    </string-array>
+    
+    <string-array name="KuaKyn">
+        <item>Naut</item>
+        <item>Kýr</item>
+    </string-array>
+    
+    <string-array name="KindaKyn">
+        <item>Hrútur</item>
+        <item>Ær</item>
+    </string-array>
+    
+    <string-array name="HundaUndirtegundir">
+        <item>Border collie</item>
+        <item>Bichon frise</item>
+        <item>Labrador retriever</item>
+        <item>Golden retriever</item>
+        <item>Chihuahua</item>
+        <item>Dalmatíuhundur</item>
+        <item>Pekingeser</item>
+        <item>Fox terrier</item>   
+    </string-array>
+    
+    <string-array name="KattaUndirtegundir">
+        <item>Sphynx</item>
+        <item>Bengal</item>
+        <item>Persian</item>
+        <item>Siamese</item>
+        <item>Somali</item>
+    </string-array>
+    
+    <string-array name="AdrarUndirtegundir">
+        <item>Íslenskt</item>
+    </string-array>
+    
 
+    
 </resources>
