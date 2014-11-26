@@ -14,6 +14,14 @@
         android:paddingRight="16dp"
         android:paddingTop="16dp" >
 
+        <ImageView
+            android:id="@+id/popup_lost_pet_pic"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginRight="@dimen/editText_margin"
+            android:padding="@dimen/editText_margin"
+            android:src="@drawable/ic_tyndr" />
+
         <TextView
             android:id="@+id/popup_nafn"
             android:layout_width="match_parent"
@@ -50,40 +58,33 @@
             android:textColor="@color/svartur"
             android:textSize="18dp" />
 
-		<LinearLayout
-		    android:layout_width="match_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal" >
+        <Button
+            android:id="@+id/popup_skra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:background="@drawable/button"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/fannDyr"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16dip"
+            android:textStyle="bold" />
 
-		    <Button
-	            android:id="@+id/popup_fundid"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_margin="@dimen/button_margin"
-	            android:background="@drawable/button"
-	            android:clickable="true"
-	            android:focusable="true"
-	            android:fontFamily="sans-serif"
-	            android:text="@string/skra"
-	            android:textColor="#FFFFFFFF"
-	            android:textSize="16dip"
-	            android:textStyle="bold"
-	            android:layout_weight="1" />
-        	<Button
-	            android:id="@+id/popup_skra"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_margin="@dimen/button_margin"
-	            android:background="@drawable/button"
-	            android:clickable="true"
-	            android:focusable="true"
-	            android:fontFamily="sans-serif"
-	            android:text="@string/skra"
-	            android:textColor="#FFFFFFFF"
-	            android:textSize="16dip"
-	            android:textStyle="bold"
-	            android:layout_weight="1"  />
-       	</LinearLayout>
+        <Button
+            android:id="@+id/popup_loka"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/button_margin"
+            android:background="@drawable/button"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="sans-serif"
+            android:text="@string/fannEkkiDyr"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16dip"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </ScrollView>
