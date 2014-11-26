@@ -181,11 +181,15 @@ public class Adds extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				pets.add( new Pet(
-						newPet.getString("name"),
-						location,
-						newPet.getString("description"),
-						newPet.getString("id")));
+				Pet petty = new Pet();
+				petty.setName(newPet.getString("name"));
+				petty.setDescription(newPet.getString("description"));
+				petty.setLocation(location);
+				petty.setId(newPet.getString("id"));
+				petty.setImage(newPet.getString("image"));
+				petty.setMyAd(newPet.getBoolean("mine"));
+				petty.setEmail(newPet.getString("author_email"));
+				pets.add(petty);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -202,9 +206,9 @@ public class Adds extends Activity {
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
 //			ImageView image = (ImageView) view.findViewById(R.id.lost_pet_pic);
 			MyndaLoader myndaLoader = new MyndaLoader();
-			name.setText(pets.get(i).name);
-			location.setText(pets.get(i).location);
-			description.setText(pets.get(i).description);
+			name.setText(pets.get(i).getName());
+			location.setText(pets.get(i).getLocation());
+			description.setText(pets.get(i).getDescription());
 			switch (rand.nextInt(5)) {
 			case 0: myndaLoader.setImage(getResources().getDrawable(R.drawable.cat)); break;
 			case 1: myndaLoader.setImage(getResources().getDrawable(R.drawable.dog)); break;

@@ -52,9 +52,9 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 	private void fyllaPopup(View view) {
 		Pet pet =  (Pet) view.getTag();
 //		((ImageView)) popLayout.findViewById(R.id.popup_lost_pet_pic)
-		((TextView) popLayout.findViewById(R.id.popup_nafn)).setText(pet.name);
-		((TextView) popLayout.findViewById(R.id.popup_stadur)).setText(pet.location);
-		((TextView) popLayout.findViewById(R.id.popup_lysing)).setText(pet.description);
+		((TextView) popLayout.findViewById(R.id.popup_nafn)).setText(pet.getName());
+		((TextView) popLayout.findViewById(R.id.popup_stadur)).setText(pet.getLocation());
+		((TextView) popLayout.findViewById(R.id.popup_lysing)).setText(pet.getDescription());
 		showAtLocation(parent.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
 	}
 }

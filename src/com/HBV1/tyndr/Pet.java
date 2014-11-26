@@ -1,5 +1,7 @@
 package com.HBV1.tyndr;
 
+import android.graphics.Bitmap;
+
 /*
  * @author: Bjorn Sigurdsson
  * @version: 0.1
@@ -15,15 +17,56 @@ package com.HBV1.tyndr;
 
 
 public class Pet {
-	final public String name;
-	final public String location;
-	final public String description;
-	final public String id;
+	private String name;
+	private String location;
+	private String description;
+	private String id;
+	private Bitmap image;
+	private String email;
+	private boolean isMyAd;
 	
-	public Pet(String name, String location, String description, String id) {
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
 		this.name = name;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
 		this.location = location;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
 		this.id = id;
 	}
+	public Bitmap getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		//fall sem tommi er med
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public boolean isMyAd() {
+		return isMyAd;
+	}
+	public void setMyAd(boolean isMyAd) {
+		this.isMyAd = isMyAd;
+	}
+
+	
 }
