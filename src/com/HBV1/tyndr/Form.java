@@ -189,6 +189,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
             }
         }
     
+    /*
+     * Fengið að láni frá stackoverflow, snýr mynndum rétt.
+     */
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -275,13 +278,14 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	 */
 	public void fyllaTegundir()
 	{
+
 		List<String> tegundir = new ArrayList<String>();
-		tegundir.add("Veldu:");
-		tegundir.add("Hundur"); //pos 1
-		tegundir.add("Kisi"); // pos 2
-		tegundir.add("Hestur"); // pos 3
-		tegundir.add("Belja"); // pos 4
-		
+		tegundir.add("Veldu tegund");
+        String[] tegund = getResources().getStringArray(R.array.Dyr);
+        for(int i=0; i<tegund.length;i++)
+        {
+            tegundir.add(tegund[i]);
+        }
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		tegundirSpinner.setAdapter(adapt);
@@ -306,28 +310,30 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void fyllaKyn(int tegund)
 	{
 		List<String> kyn = new ArrayList<String>();
-		
+		String[] kynid = null;
 		switch(tegund){
 			case 1:
-				kyn.add("Rakki");
-				kyn.add("Tik");
+				kynid = getResources().getStringArray(R.array.HundaKyn);
 				break;
 			case 2:
-				kyn.add("Fress");
-				kyn.add("Laeda");
+				kynid = getResources().getStringArray(R.array.KattarKyn);
 				break;
 			case 3:
-				kyn.add("Hross");
-				kyn.add("Hryssa");
+				kynid = getResources().getStringArray(R.array.HestaKyn);
 				break;
 			case 4:
-				kyn.add("Naut");
-				kyn.add("Kyr");
+				kynid = getResources().getStringArray(R.array.KuaKyn);
+				break;
+			case 5:
+				kynid = getResources().getStringArray(R.array.KindaKyn);
 				break;
 			default:
-				kyn.add("Veldu tegund");
+				kynid = new String[1];
+				kynid[0] = "Veldu tegund";
 		}
 		
+		for(int i = 0; i<kynid.length;i++)
+			kyn.add(kynid[i]);
 		if (tegund!=0)
 			kyn.add("Veit ekki");
 		
@@ -344,28 +350,28 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	public void fyllaUndirtegund(int tegund)
 	{
 		List<String> undirtegund = new ArrayList<String>();
+		String[] UT = new String[3];
 		
 		switch(tegund){
 			case 1:
-				undirtegund.add("Puddel");
-				undirtegund.add("Great Dane");
-				undirtegund.add("Blendingur");
+				UT = getResources().getStringArray(R.array.HundaUndirtegundir);
 				break;
 			case 2:
-				undirtegund.add("Ljon");
-				undirtegund.add("American Bobtail");
+				UT = getResources().getStringArray(R.array.KattaUndirtegundir);
 				break;
 			case 3:
-				undirtegund.add("Islenskur");
-				undirtegund.add("Utlenskur");
-				break;
+
 			case 4:
-				undirtegund.add("Mjolkur Ku");
-				undirtegund.add("Villtur");
+
+			case 5:
+				UT = getResources().getStringArray(R.array.AdrarUndirtegundir);
 				break;
 			default:
-				undirtegund.add("Veldu tegund");
+				UT = new String[1];
+				UT[0] = "Veldu Tegund";
 		}
+		for(int i=0; i<UT.length;i++)
+			undirtegund.add(UT[i]);
 		if (tegund!=0)
 			undirtegund.add("Veit ekki");
 		
