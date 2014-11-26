@@ -1,5 +1,9 @@
 package com.HBV1.tyndr;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
 /*
  * @author: Bjorn Sigurdsson
  * @version: 0.1
@@ -25,5 +29,10 @@ public class Pet {
 		this.location = location;
 		this.description = description;
 		this.id = id;
+	}
+	public static Bitmap decodeBase64(String input) 
+	{
+	    byte[] decodedByte = Base64.decode(input, 0);
+	    return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
 	}
 }
