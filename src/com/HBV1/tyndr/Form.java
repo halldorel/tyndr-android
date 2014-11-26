@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Location;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -165,25 +166,72 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	            case SELECT_PICTURE:
 	            	Uri selectedImageUri = data.getData();
 	                String bla = getRealPathFromURI(selectedImageUri);
-	                Bitmap mBitmap = BitmapFactory.decodeFile(bla);
+	                BitmapFactory.Options options = new BitmapFactory.Options();
+	                options.inSampleSize = 4;
+	                Bitmap mBitmap = BitmapFactory.decodeFile(bla,options);
 
-	                Mynd.setImageBitmap(mBitmap);
-
+	                
+	                int rotation = 0;
 	                try {
-	                    ExifInterface exif = new ExifInterface(selectedImageUri.getPath());
-	                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+	                    ExifInterface exif = new ExifInterface(bla);
+	                    rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+	                    Log.d("bla",Integer.toString(rotation));
 	                    if(rotation==0)
 	                        Mynd.setRotation(90);
 	                } catch (IOException e) {
 	                    e.printStackTrace();
 	                }
-
+	                
+	                Mynd.setImageBitmap(rotateBitmap(mBitmap,rotation));
 	                break;
 	         }
                 
             }
         }
+    
+    public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
+        Matrix matrix = new Matrix();
+		switch (orientation) {
+		    case ExifInterface.ORIENTATION_NORMAL:
+		        return bitmap;
+		    case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+		        matrix.setScale(-1, 1);
+		        break;
+		    case ExifInterface.ORIENTATION_ROTATE_180:
+		        matrix.setRotate(180);
+		        break;
+		    case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+		        matrix.setRotate(180);
+		        matrix.postScale(-1, 1);
+		        break;
+		    case ExifInterface.ORIENTATION_TRANSPOSE:
+		        matrix.setRotate(90);
+		        matrix.postScale(-1, 1);
+		        break;
+		   case ExifInterface.ORIENTATION_ROTATE_90:
+		       matrix.setRotate(90);
+		       break;
+		   case ExifInterface.ORIENTATION_TRANSVERSE:
+		       matrix.setRotate(-90);
+		       matrix.postScale(-1, 1);
+		       break;
+		   case ExifInterface.ORIENTATION_ROTATE_270:
+		       matrix.setRotate(-90);
+		       break;
+		   default:
+		       return bitmap;
+		}
+		try {
+		    Bitmap bmRotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+		    bitmap.recycle();
+		    return bmRotated;
+		}
+		catch (OutOfMemoryError e) {
+		    e.printStackTrace();
+		    return null;
+		}
+    }
 
 
 
