@@ -47,6 +47,78 @@
             android:textSize="18dp" />
 
         <TextView
+            android:id="@+id/popup_aldur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/popup_tegund"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/popup_undirtegund"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/popup_feldur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/popup_litur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
+            android:id="@+id/popup_kyn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/textview_pink"
+            android:gravity="center"
+            android:padding="@dimen/editText_margin"
+            android:text="@string/nafnLabel"
+            android:textColor="@color/svartur"
+            android:textSize="18dp" />
+
+        <TextView
             android:id="@+id/popup_lysing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

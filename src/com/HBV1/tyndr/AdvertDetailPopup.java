@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -51,10 +52,15 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 	
 	private void fyllaPopup(View view) {
 		Pet pet =  (Pet) view.getTag();
-//		((ImageView)) popLayout.findViewById(R.id.popup_lost_pet_pic)
+		((ImageView) popLayout.findViewById(R.id.popup_lost_pet_pic)).setImageBitmap(pet.getImage());;
 		((TextView) popLayout.findViewById(R.id.popup_nafn)).setText(pet.getName());
 		((TextView) popLayout.findViewById(R.id.popup_stadur)).setText(pet.getLocation());
 		((TextView) popLayout.findViewById(R.id.popup_lysing)).setText(pet.getDescription());
+		((TextView) popLayout.findViewById(R.id.popup_tegund)).setText(pet.getSpecies());
+		((TextView) popLayout.findViewById(R.id.popup_undirtegund)).setText(pet.getSubspecies());
+//		((TextView) popLayout.findViewById(R.id.popup_litur)).setText(pet.getColor());
+//		((TextView) popLayout.findViewById(R.id.popup_kyn)).setText(pet.getSex());
+//		((TextView) popLayout.findViewById(R.id.popup_feldur)).setText(pet.getFur());
 		showAtLocation(parent.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
 	}
 }
