@@ -13,8 +13,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,27 +54,6 @@ public class Adds extends Activity {
 		filterSpinner = (Spinner) findViewById(R.id.filter);
 		advertDetailPopup = new AdvertDetailPopup(this);
 		upphafsstilla();
-		
-//		clicky = new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View arg0) {
-//				if (lastPetPopup != null) {
-//					lastPetPopup.setBackgroundColor(0x00000000);
-//				}
-//				arg0.setBackgroundColor(Color.CYAN);
-//				lastPetPopup = arg0;
-//				popupWindow.showAtLocation(addsView, Gravity.CENTER, 0, 0);
-//				popButton.setOnClickListener(new OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						lastPetPopup.setBackgroundColor(0x00000000);
-//						popupWindow.dismiss();
-//					}
-//				});
-
-//			}
-//		};
 		
 		try {
 			auglysingar = new GET().execute("").get();
@@ -236,19 +217,50 @@ public class Adds extends Activity {
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
-			ImageView image = (ImageView) view.findViewById(R.id.lost_pet_pic);
+//			ImageView image = (ImageView) view.findViewById(R.id.lost_pet_pic);
+			MyndaLoader myndaLoader = new MyndaLoader();
 			name.setText(pets.get(i).name);
 			location.setText(pets.get(i).location);
 			description.setText(pets.get(i).description);
 			switch (rand.nextInt(5)) {
-			case 0: image.setImageDrawable(getResources().getDrawable(R.drawable.cat)); break;
-			case 1: image.setImageDrawable(getResources().getDrawable(R.drawable.dog)); break;
-			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
-			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
-			case 4: image.setImageDrawable(getResources().getDrawable(R.drawable.horse)); break;
+			case 0: myndaLoader.setImage(getResources().getDrawable(R.drawable.cat)); break;
+			case 1: myndaLoader.setImage(getResources().getDrawable(R.drawable.dog)); break;
+			case 2: myndaLoader.setImage(getResources().getDrawable(R.drawable.mouse)); break;
+			case 3: myndaLoader.setImage(getResources().getDrawable(R.drawable.spider)); break;
+			case 4: myndaLoader.setImage(getResources().getDrawable(R.drawable.horse)); break;
+//			case 1: image.setImageDrawable(getResources().getDrawable(R.drawable.dog)); break;
+//			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
+//			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
+//			case 4: image.setImageDrawable(getResources().getDrawable(R.drawable.horse)); break;
 			}
 			view.setTag(pets.get(i));
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			myndaLoader.execute(view);
+		}
+	}
+	
+	class MyndaLoader extends AsyncTask<View,Void,String> {
+		View view = null;
+		Drawable image = null;
+		void setImage(Drawable image) {
+			this.image = image;
+		}
+		@Override
+		protected String doInBackground(View... params) {
+			this.view = params[0];
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		@Override
+        protected void onPostExecute(String woot) {
+			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
+			imageView.setImageDrawable(image);
+			
 		}
 	}
 	

@@ -26,6 +26,8 @@
     <string name="feldurLabel">Feldur</string>
     <string name="liturLabel">Litur á feld</string>
     <string name="lysingLabel">Lýsing</string>
+    <string name="fannDyr">Ég fann þetta dýr!</string>
+    <string name="fannEkkiDyr">Ég hef ekki séð þetta dýr.</string>
 
     <string-array name="Feldir">
         <item>Hárlaus</item>
