@@ -13,7 +13,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -186,9 +186,16 @@ public class Adds extends Activity {
 				petty.setDescription(newPet.getString("description"));
 				petty.setLocation(location);
 				petty.setId(newPet.getString("id"));
-				petty.setImage(newPet.getString("image"));
+				petty.setImage(newPet.getString("image_string"));
 				petty.setMyAd(newPet.getBoolean("mine"));
 				petty.setEmail(newPet.getString("author_email"));
+				petty.setSpecies(newPet.getString("species"));
+				petty.setSubspecies(newPet.getString("subspecies"));
+//				petty.setSex(newPet.getString("sex"));
+//				petty.setFur(newPet.getString("fur"));
+//				petty.setAge(newPet.getInt("age"));
+//				petty.setColor(newPet.getString("color"));
+
 				pets.add(petty);
 			}
 		} catch (JSONException e) {
@@ -197,29 +204,17 @@ public class Adds extends Activity {
 		}
 		insertPoint.removeAllViews();
 		LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		Random rand = new Random();
 		for (int i=0; i<pets.size(); i++) {
 			View view = inflater.inflate(R.layout.pet_list_item, insertPoint, false);
 			view.setOnClickListener(advertDetailPopup);
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
-//			ImageView image = (ImageView) view.findViewById(R.id.lost_pet_pic);
 			MyndaLoader myndaLoader = new MyndaLoader();
 			name.setText(pets.get(i).getName());
 			location.setText(pets.get(i).getLocation());
 			description.setText(pets.get(i).getDescription());
-			switch (rand.nextInt(5)) {
-			case 0: myndaLoader.setImage(getResources().getDrawable(R.drawable.cat)); break;
-			case 1: myndaLoader.setImage(getResources().getDrawable(R.drawable.dog)); break;
-			case 2: myndaLoader.setImage(getResources().getDrawable(R.drawable.mouse)); break;
-			case 3: myndaLoader.setImage(getResources().getDrawable(R.drawable.spider)); break;
-			case 4: myndaLoader.setImage(getResources().getDrawable(R.drawable.horse)); break;
-//			case 1: image.setImageDrawable(getResources().getDrawable(R.drawable.dog)); break;
-//			case 2: image.setImageDrawable(getResources().getDrawable(R.drawable.mouse)); break;
-//			case 3: image.setImageDrawable(getResources().getDrawable(R.drawable.spider)); break;
-//			case 4: image.setImageDrawable(getResources().getDrawable(R.drawable.horse)); break;
-			}
+			myndaLoader.setImage(pets.get(i).getImage());
 			view.setTag(pets.get(i));
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 			myndaLoader.execute(view);
@@ -228,8 +223,8 @@ public class Adds extends Activity {
 	
 	class MyndaLoader extends AsyncTask<View,Void,String> {
 		View view = null;
-		Drawable image = null;
-		void setImage(Drawable image) {
+		Bitmap image = null;
+		void setImage(Bitmap image) {
 			this.image = image;
 		}
 		@Override
@@ -246,7 +241,7 @@ public class Adds extends Activity {
 		@Override
         protected void onPostExecute(String woot) {
 			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
-			imageView.setImageDrawable(image);
+			imageView.setImageBitmap(image);
 			
 		}
 	}
