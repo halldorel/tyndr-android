@@ -1,6 +1,8 @@
 package com.HBV1.tyndr;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
 /*
  * @author: Bjorn Sigurdsson
@@ -53,7 +55,7 @@ public class Pet {
 		return image;
 	}
 	public void setImage(String image) {
-		//fall sem tommi er med
+		this.image = decodeBase64(image);
 	}
 	public String getEmail() {
 		return email;
@@ -67,6 +69,8 @@ public class Pet {
 	public void setMyAd(boolean isMyAd) {
 		this.isMyAd = isMyAd;
 	}
-
-	
+	public static Bitmap decodeBase64(String input) {
+	    byte[] decodedByte = Base64.decode(input, 0);
+	    return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 
+	}
 }
