@@ -54,36 +54,20 @@ public class Adds extends Activity {
 		filterSpinner = (Spinner) findViewById(R.id.filter);
 		advertDetailPopup = new AdvertDetailPopup(this);
 		upphafsstilla();
-		
-		try {
-			auglysingar = new GET().execute("").get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		fyllaLista();
-
+		getFromServerAndFillList("");
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.adds, menu);
 		return true;
 	}
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
 		if (drawerNavigator.openItem(item)) {
 			return true;
 		}
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -94,17 +78,14 @@ public class Adds extends Activity {
 	 * 
 	 * tekur hvorki vid ne skilar neinu.
 	 */
-	
 	public void upphafsstilla()
 	{
 		List<String> tegundir = new ArrayList<String>();
 		tegundir.add("Tynd");
 		tegundir.add("fundin"); 
-		
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		filterSpinner.setAdapter(adapt);
-		
 		filterSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1 ,int arg2, long arg3) {
@@ -122,63 +103,43 @@ public class Adds extends Activity {
 	 * 
 	 */
 	
-	public void filter(int id)
-	{
-		switch(id)
-		{
-		case 0:
-			try {
-				auglysingar = new GET().execute("lost_pets").get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			fyllaLista();
-			break;
-			
-		case 1:
-			try {
-				auglysingar = new GET().execute("found_pets").get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			fyllaLista();
-			break;
+	public void filter(int id) {
+		switch(id) {
+		case 0: getFromServerAndFillList("lost_pets"); break;
+		case 1: getFromServerAndFillList("found_pets");
 		}
 	}
 	
-	
+	private void getFromServerAndFillList(String label) {
+		try {
+			auglysingar = new GET().execute(label).get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
+		fyllaLista();
+	}
 		
 	/*
 	 * Fallid fyllir a og birtir listann sem auglysingarnar eru syndar a. 
 	 * tekur hvorki vid ne skilar neinu.
 	 */
-	void fyllaLista() 
-	{
+	void fyllaLista() {
 		if(auglysingar.length()<1) return;
-		
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		List<Pet> pets = new ArrayList<Pet>();
 		try {
 			JSONArray jerry = new JSONArray(auglysingar);
 
-			for(int i = 0; i<jerry.length();i++)
-			{
+			for(int i = 0; i<jerry.length();i++) {
 				JSONObject newPet = (JSONObject) jerry.get(i);
 				String location = null;
-				try{
+				try {
 					location = getGeoLocation(
 							newPet.getDouble("lat"),
 							newPet.getDouble("lon"));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Pet petty = new Pet();
@@ -195,11 +156,9 @@ public class Adds extends Activity {
 //				petty.setFur(newPet.getString("fur"));
 //				petty.setAge(newPet.getInt("age"));
 //				petty.setColor(newPet.getString("color"));
-
 				pets.add(petty);
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		insertPoint.removeAllViews();
@@ -233,7 +192,6 @@ public class Adds extends Activity {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return null;
@@ -242,42 +200,30 @@ public class Adds extends Activity {
         protected void onPostExecute(String woot) {
 			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
 			imageView.setImageBitmap(image);
-			
 		}
 	}
 	
-	public String getGeoLocation(double lat, double lon)
-	{
+	public String getGeoLocation(double lat, double lon) {
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 		List<Address> addresses = null;
-		
 		try {
-			addresses = geocoder.getFromLocation(lat,
-                    lon, 1);
-		}             
-		catch (IOException e1) {
-            Log.e("LocationSampleActivity",
-                    "IO Exception in getFromLocation()");
-            e1.printStackTrace();
-            
-            } 
-		catch (IllegalArgumentException e2) {
+			addresses = geocoder.getFromLocation(lat, lon, 1);
+		} catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
             // Error message to post in the log
             String errorString = "Illegal arguments " +
-                    Double.toString(lat) +
-                    " , " +
+                    Double.toString(lat) + " , " +
                     Double.toString(lon) +
                     " passed to address service";
             Log.e("LocationSampleActivity", errorString);
-            e2.printStackTrace();
-            }
+            e.printStackTrace();
+        }
 		if (addresses != null && addresses.size() > 0) {
             // Get the first address
             Address address = addresses.get(0);
-            /*
-             * Format the first line of address (if available),
-             * city, and country name.
-             */
+            // Format the first line of address (if available),
+            // city, and country name.
             String addressText = String.format(
                     "%s, %s, %s",
                     // If there's a street address, add it
