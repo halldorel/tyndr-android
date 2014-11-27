@@ -552,6 +552,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		newAdd.setLat(loc.getLatitude());
 		newAdd.setLon(loc.getLongitude());
 		newAdd.setImageString(BaseMynd);
+		newAdd.setSex(kynSpinner.getSelectedItem().toString());
+		newAdd.setColor(litirSpinner.getSelectedItem().toString());
+		newAdd.setFur(feldurSpinner.getSelectedItem().toString());
 		if(lost)
 			newAdd.setLabel("lost_pets");
 		else

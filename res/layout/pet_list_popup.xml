@@ -139,7 +139,7 @@
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="sans-serif"
-            android:text="@string/fannDyr"
+            android:text="@string/hafaSamband"
             android:textColor="#FFFFFFFF"
             android:textSize="16dip"
             android:textStyle="bold" />
@@ -153,7 +153,7 @@
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="sans-serif"
-            android:text="@string/fannEkkiDyr"
+            android:text="@string/lokaGlugga"
             android:textColor="#FFFFFFFF"
             android:textSize="16dip"
             android:textStyle="bold" />
