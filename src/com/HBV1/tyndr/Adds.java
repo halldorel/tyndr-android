@@ -11,8 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,6 +34,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.HBV1.tyndrNetwork.GET;
+import com.HBV1.tyndrNetwork.MINE;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -44,7 +48,8 @@ public class Adds extends Activity {
 	private String auglysingar; // geymir svarid fra servernum.
 	private DrawerNavigator drawerNavigator;
 	private AdvertDetailPopup advertDetailPopup;
-	
+	String accountName;
+	GoogleAccountCredential credential;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,7 +59,8 @@ public class Adds extends Activity {
 		filterSpinner = (Spinner) findViewById(R.id.filter);
 		advertDetailPopup = new AdvertDetailPopup(this);
 		upphafsstilla();
-		
+
+
 		try {
 			auglysingar = new GET().execute("").get();
 		} catch (InterruptedException e) {
@@ -74,37 +80,38 @@ public class Adds extends Activity {
 		getMenuInflater().inflate(R.menu.adds, menu);
 		return true;
 	}
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
 		if (drawerNavigator.openItem(item)) {
 			return true;
 		}
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-	
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
 	/*
 	 * uphafsstillir spinner hlut og setur hlustara a hann.
 	 * 
 	 * tekur hvorki vid ne skilar neinu.
 	 */
-	
+
 	public void upphafsstilla()
 	{
 		List<String> tegundir = new ArrayList<String>();
 		tegundir.add("Tynd");
 		tegundir.add("fundin"); 
-		
+		tegundir.add("Minar auglysingar");
+
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		filterSpinner.setAdapter(adapt);
-		
+
 		filterSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1 ,int arg2, long arg3) {
@@ -114,14 +121,14 @@ public class Adds extends Activity {
 			public void onNothingSelected(AdapterView<?> arg0) {}
 		});
 	}
-	
+
 	/*
 	 * Gerir mismunandi koll a serverinn eftir gildi id.
 	 * 
 	 * @param: id saetistala valkostar i spinner hlut stjornar thvi hvada adgerd er valin.
 	 * 
 	 */
-	
+
 	public void filter(int id)
 	{
 		switch(id)
@@ -138,7 +145,7 @@ public class Adds extends Activity {
 			}
 			fyllaLista();
 			break;
-			
+
 		case 1:
 			try {
 				auglysingar = new GET().execute("found_pets").get();
@@ -151,11 +158,41 @@ public class Adds extends Activity {
 			}
 			fyllaLista();
 			break;
+		case 2:
+			credential = GoogleAccountCredential.usingAudience(this,
+					"server:client_id:259192441078-gmov6a7cj5dbg8ikdgkdalht3vuevs00.apps.googleusercontent.com");
+			chooseAccount();
+			try{
+				auglysingar = new MINE(credential).execute().get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			break;
 		}
 	}
-	
-	
-		
+	static final int REQUEST_ACCOUNT_PICKER = 2;
+
+	void chooseAccount() {
+		startActivityForResult(credential.newChooseAccountIntent(),
+				REQUEST_ACCOUNT_PICKER);
+	}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if(requestCode == REQUEST_ACCOUNT_PICKER){
+				if (data != null && data.getExtras() != null) {
+					accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+					if (accountName != null) {
+						credential.setSelectedAccountName(accountName);
+					}
+				}
+			}
+		}
+	}
+
 	/*
 	 * Fallid fyllir a og birtir listann sem auglysingarnar eru syndar a. 
 	 * tekur hvorki vid ne skilar neinu.
@@ -163,7 +200,7 @@ public class Adds extends Activity {
 	void fyllaLista() 
 	{
 		if(auglysingar.length()<1) return;
-		
+
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		List<Pet> pets = new ArrayList<Pet>();
 		try {
@@ -191,10 +228,10 @@ public class Adds extends Activity {
 				petty.setEmail(newPet.getString("author_email"));
 				petty.setSpecies(newPet.getString("species"));
 				petty.setSubspecies(newPet.getString("subspecies"));
-//				petty.setSex(newPet.getString("sex"));
-//				petty.setFur(newPet.getString("fur"));
-//				petty.setAge(newPet.getInt("age"));
-//				petty.setColor(newPet.getString("color"));
+				//petty.setSex(newPet.getString("sex"));
+				//petty.setFur(newPet.getString("fur"));
+				//petty.setAge(newPet.getInt("age"));
+				//petty.setColor(newPet.getString("color"));
 
 				pets.add(petty);
 			}
@@ -210,87 +247,62 @@ public class Adds extends Activity {
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
-			MyndaLoader myndaLoader = new MyndaLoader();
+			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
+			imageView.setImageBitmap(pets.get(i).getImage());
 			name.setText(pets.get(i).getName());
 			location.setText(pets.get(i).getLocation());
 			description.setText(pets.get(i).getDescription());
-			myndaLoader.setImage(pets.get(i).getImage());
 			view.setTag(pets.get(i));
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-			myndaLoader.execute(view);
 		}
 	}
-	
-	class MyndaLoader extends AsyncTask<View,Void,String> {
-		View view = null;
-		Bitmap image = null;
-		void setImage(Bitmap image) {
-			this.image = image;
-		}
-		@Override
-		protected String doInBackground(View... params) {
-			this.view = params[0];
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		@Override
-        protected void onPostExecute(String woot) {
-			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
-			imageView.setImageBitmap(image);
-			
-		}
-	}
-	
+
+
 	public String getGeoLocation(double lat, double lon)
 	{
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 		List<Address> addresses = null;
-		
+
 		try {
 			addresses = geocoder.getFromLocation(lat,
-                    lon, 1);
+					lon, 1);
 		}             
 		catch (IOException e1) {
-            Log.e("LocationSampleActivity",
-                    "IO Exception in getFromLocation()");
-            e1.printStackTrace();
-            
-            } 
+			Log.e("LocationSampleActivity",
+					"IO Exception in getFromLocation()");
+			e1.printStackTrace();
+
+		} 
 		catch (IllegalArgumentException e2) {
-            // Error message to post in the log
-            String errorString = "Illegal arguments " +
-                    Double.toString(lat) +
-                    " , " +
-                    Double.toString(lon) +
-                    " passed to address service";
-            Log.e("LocationSampleActivity", errorString);
-            e2.printStackTrace();
-            }
+			// Error message to post in the log
+			String errorString = "Illegal arguments " +
+					Double.toString(lat) +
+					" , " +
+					Double.toString(lon) +
+					" passed to address service";
+			Log.e("LocationSampleActivity", errorString);
+			e2.printStackTrace();
+		}
 		if (addresses != null && addresses.size() > 0) {
-            // Get the first address
-            Address address = addresses.get(0);
-            /*
-             * Format the first line of address (if available),
-             * city, and country name.
-             */
-            String addressText = String.format(
-                    "%s, %s, %s",
-                    // If there's a street address, add it
-                    address.getMaxAddressLineIndex() > 0 ?
-                            address.getAddressLine(0) : "",
-                    // Locality is usually a city
-                    address.getLocality(),
-                    // The country of the address
-                    address.getCountryName());
-            // Return the text
-            return "nalaegt " +addressText;
-        } else {
-            return "othekkt";
-        }
+			// Get the first address
+			Address address = addresses.get(0);
+			/*
+			 * Format the first line of address (if available),
+			 * city, and country name.
+			 */
+			String addressText = String.format(
+					"%s, %s, %s",
+					// If there's a street address, add it
+					address.getMaxAddressLineIndex() > 0 ?
+							address.getAddressLine(0) : "",
+							// Locality is usually a city
+							address.getLocality(),
+							// The country of the address
+							address.getCountryName());
+			// Return the text
+			return "nalaegt " +addressText;
+		} else {
+			return "othekkt";
+		}
 	}
 }
