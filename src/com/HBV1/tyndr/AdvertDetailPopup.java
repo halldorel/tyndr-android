@@ -16,6 +16,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+/*
+* @author: Bjorn Sigurdsson<bjs45@hi.is>
+* @version: 0.1
+* @since: 2014-11-27
+*/
 public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 	Activity parent;
 	LinearLayout popLayout;
