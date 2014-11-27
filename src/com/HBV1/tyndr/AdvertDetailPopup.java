@@ -51,8 +51,8 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.popup_loka: svara(); 
-		case R.id.popup_skra: dismiss(); dimmer.getForeground().setAlpha( 0) ; break;
+		case R.id.popup_skra: svara(); 
+		case R.id.popup_loka: dismiss(); dimmer.getForeground().setAlpha( 0) ; break;
 		default: fyllaPopup(view); dimmer.getForeground().setAlpha(160);
 		}
 	}
@@ -69,9 +69,9 @@ public class AdvertDetailPopup extends PopupWindow implements OnClickListener {
 		((TextView) popLayout.findViewById(R.id.popup_lysing)).setText(pet.getDescription());
 		((TextView) popLayout.findViewById(R.id.popup_tegund)).setText(pet.getSpecies());
 		((TextView) popLayout.findViewById(R.id.popup_undirtegund)).setText(pet.getSubspecies());
-		//((TextView) popLayout.findViewById(R.id.popup_litur)).setText(pet.getColor());
-		//((TextView) popLayout.findViewById(R.id.popup_kyn)).setText(pet.getSex());
-		//((TextView) popLayout.findViewById(R.id.popup_feldur)).setText(pet.getFur());
+		((TextView) popLayout.findViewById(R.id.popup_litur)).setText(pet.getColor());
+		((TextView) popLayout.findViewById(R.id.popup_kyn)).setText(pet.getSex());
+		((TextView) popLayout.findViewById(R.id.popup_feldur)).setText(pet.getFur());
 		showAtLocation(parent.findViewById(android.R.id.content), Gravity.CENTER, 0, 0);
 	}
 	

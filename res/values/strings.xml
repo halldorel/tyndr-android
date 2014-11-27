@@ -28,6 +28,9 @@
     <string name="lysingLabel">Lýsing</string>
     <string name="fannDyr">Ég fann þetta dýr!</string>
     <string name="fannEkkiDyr">Ég hef ekki séð þetta dýr.</string>
+    <string name="lysingLabel">Lýsing</string>
+    <string name="hafaSamband">Hafa samband við eiganda</string>
+    <string name="lokaGlugga">Loka Glugga</string>
 
     <string-array name="Feldir">
         <item>Hárlaus</item>

@@ -181,10 +181,10 @@ public class Adds extends Activity {
 				petty.setEmail(newPet.getString("author_email"));
 				petty.setSpecies(newPet.getString("species"));
 				petty.setSubspecies(newPet.getString("subspecies"));
-				//petty.setSex(newPet.getString("sex"));
-				//petty.setFur(newPet.getString("fur"));
-				//petty.setAge(newPet.getInt("age"));
-				//petty.setColor(newPet.getString("color"));
+				petty.setSex(newPet.getString("sex"));
+				petty.setFur(newPet.getString("fur"));
+				petty.setAge(newPet.getInt("age"));
+				petty.setColor(newPet.getString("color"));
 				pets.add(petty);
 			}
 		} catch (JSONException e) {
