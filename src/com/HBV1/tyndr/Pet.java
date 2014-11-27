@@ -4,15 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
 
-/*
+/**
  * @author: Bjorn Sigurdsson
  * @version: 0.1
  * @since: 2014-10-29
  * 
  * Adeins notadur til ad geyma upplysingar. Geymir nafn, stadsetningu og lysing a dyrir.
  */
-
-
 public class Pet {
 	private String name;
 	private String location;
@@ -55,8 +53,15 @@ public class Pet {
 	public Bitmap getImage() {
 		return image;
 	}
-	public void setImage(String image) {
+	/**
+	 * Tekur vid base64 streng af mynd og breytir strengnum i bitmap mynd
+	 * @param image
+	 */
+	public boolean setImage(String image) {
 		this.image = decodeBase64(image);
+		if (this.image == null) 
+			return false;
+		return true;
 	}
 	public String getEmail() {
 		return email;
@@ -70,6 +75,11 @@ public class Pet {
 	public void setMyAd(boolean isMyAd) {
 		this.isMyAd = isMyAd;
 	}
+	/**
+	 * Tekur vid base64 streng og breytir i bitmap mynd
+	 * @param input base64 strengur af mynd
+	 * @return bitmap mynd
+	 */
 	public static Bitmap decodeBase64(String input) {
 	    byte[] decodedByte = Base64.decode(input, 0);
 	    return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length); 

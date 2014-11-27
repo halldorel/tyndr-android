@@ -4,19 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.HBV1.tyndrNetwork.GET;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 /*
  * @author: Tomas Karl Kjartansson<tkk4@hi.is>
@@ -44,6 +44,9 @@ public class Adds extends Activity {
 	private String auglysingar; // geymir svarid fra servernum.
 	private DrawerNavigator drawerNavigator;
 	private AdvertDetailPopup advertDetailPopup;
+	String accountName;
+	GoogleAccountCredential credential;
+	static final int REQUEST_ACCOUNT_PICKER = 2;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class Adds extends Activity {
 		getMenuInflater().inflate(R.menu.adds, menu);
 		return true;
 	}
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 		if (drawerNavigator.openItem(item)) {
@@ -83,6 +87,7 @@ public class Adds extends Activity {
 		List<String> tegundir = new ArrayList<String>();
 		tegundir.add("Tynd");
 		tegundir.add("fundin"); 
+		tegundir.add("Minar auglysingar");
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, tegundir);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		filterSpinner.setAdapter(adapt);
@@ -95,14 +100,13 @@ public class Adds extends Activity {
 			public void onNothingSelected(AdapterView<?> arg0) {}
 		});
 	}
-	
+
 	/*
 	 * Gerir mismunandi koll a serverinn eftir gildi id.
 	 * 
 	 * @param: id saetistala valkostar i spinner hlut stjornar thvi hvada adgerd er valin.
 	 * 
 	 */
-	
 	public void filter(int id) {
 		switch(id) {
 		case 0: getFromServerAndFillList("lost_pets"); break;
@@ -110,6 +114,11 @@ public class Adds extends Activity {
 		}
 	}
 	
+	/*
+	 * Gerir kall a server um vidfangid label
+	 * 
+	 * @param: label thad sem verid er ad bidja server um
+	 */
 	private void getFromServerAndFillList(String label) {
 		try {
 			auglysingar = new GET().execute(label).get();
@@ -120,7 +129,28 @@ public class Adds extends Activity {
 		}
 		fyllaLista();
 	}
-		
+	
+	/*
+	 * Byrjar activity sem bidur notanda ad skra sig inn
+	 */
+	void chooseAccount() {
+		startActivityForResult(credential.newChooseAccountIntent(),
+				REQUEST_ACCOUNT_PICKER);
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if(requestCode == REQUEST_ACCOUNT_PICKER){
+				if (data != null && data.getExtras() != null) {
+					accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+					if (accountName != null) {
+						credential.setSelectedAccountName(accountName);
+					}
+				}
+			}
+		}
+	}
+
 	/*
 	 * Fallid fyllir a og birtir listann sem auglysingarnar eru syndar a. 
 	 * tekur hvorki vid ne skilar neinu.
@@ -130,10 +160,9 @@ public class Adds extends Activity {
 		ViewGroup insertPoint = (ViewGroup) findViewById(R.id.lost_pet_list);
 		List<Pet> pets = new ArrayList<Pet>();
 		try {
-			JSONArray jerry = new JSONArray(auglysingar);
-
-			for(int i = 0; i<jerry.length();i++) {
-				JSONObject newPet = (JSONObject) jerry.get(i);
+			JSONArray jarry = new JSONArray(auglysingar);
+			for (int i = 0; i<jarry.length();i++) {
+				JSONObject newPet = (JSONObject) jarry.get(i);
 				String location = null;
 				try {
 					location = getGeoLocation(
@@ -152,10 +181,10 @@ public class Adds extends Activity {
 				petty.setEmail(newPet.getString("author_email"));
 				petty.setSpecies(newPet.getString("species"));
 				petty.setSubspecies(newPet.getString("subspecies"));
-//				petty.setSex(newPet.getString("sex"));
-//				petty.setFur(newPet.getString("fur"));
-//				petty.setAge(newPet.getInt("age"));
-//				petty.setColor(newPet.getString("color"));
+				//petty.setSex(newPet.getString("sex"));
+				//petty.setFur(newPet.getString("fur"));
+				//petty.setAge(newPet.getInt("age"));
+				//petty.setColor(newPet.getString("color"));
 				pets.add(petty);
 			}
 		} catch (JSONException e) {
@@ -169,40 +198,21 @@ public class Adds extends Activity {
 			TextView description = (TextView) view.findViewById(R.id.lost_pet_description);
 			TextView name = (TextView) view.findViewById(R.id.lost_pet_name);
 			TextView location = (TextView) view.findViewById(R.id.lost_pet_location);
-			MyndaLoader myndaLoader = new MyndaLoader();
+			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
+			imageView.setImageBitmap(pets.get(i).getImage());
 			name.setText(pets.get(i).getName());
 			location.setText(pets.get(i).getLocation());
 			description.setText(pets.get(i).getDescription());
-			myndaLoader.setImage(pets.get(i).getImage());
 			view.setTag(pets.get(i));
 			insertPoint.addView(view, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-			myndaLoader.execute(view);
 		}
 	}
 	
-	class MyndaLoader extends AsyncTask<View,Void,String> {
-		View view = null;
-		Bitmap image = null;
-		void setImage(Bitmap image) {
-			this.image = image;
-		}
-		@Override
-		protected String doInBackground(View... params) {
-			this.view = params[0];
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-		@Override
-        protected void onPostExecute(String woot) {
-			ImageView imageView = (ImageView) view.findViewById(R.id.lost_pet_pic);
-			imageView.setImageBitmap(image);
-		}
-	}
-	
+	/*
+	 * Naer i streng sem er gotuheiti nalaegt hnitum
+	 * @param lat breiddargrada
+	 * @param lon lengdargrada
+	 */
 	public String getGeoLocation(double lat, double lon) {
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 		List<Address> addresses = null;

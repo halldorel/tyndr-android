@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import org.json.JSONException;
-
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -66,12 +64,15 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 	private final int SELECT_PICTURE = 1;
 	LocationClient mLocationClient;
 	GoogleAccountCredential credential;
-	Tyndr hallo;
-	public static final JsonFactory jarvis = new AndroidJsonFactory();
-	public static final HttpTransport hoppy = AndroidHttp.newCompatibleTransport();
+	Tyndr tyndr;
+	public static final JsonFactory jsonFactory = new AndroidJsonFactory();
+	public static final HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
 	String accountName, BaseMynd;
+	static final int REQUEST_ACCOUNT_PICKER = 2;
 	
-
+	/**
+	 * Upphafsstillir form activity
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -87,7 +88,6 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		Mynd.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				Intent intent = new Intent();
 				intent.setType("image/*");
 				intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -106,10 +106,13 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		datepicker();
 		fyllaTegundir();
 		mLocationClient = new LocationClient(this, this, this);
-		Tyndr.Builder tommi = new Tyndr.Builder(hoppy, jarvis, credential);
-		hallo = tommi.build();
+		Tyndr.Builder tommi = new Tyndr.Builder(httpTransport, jsonFactory, credential);
+		tyndr = tommi.build();
 	}
 	
+	/**
+	 * Tengist stadsetningarthjonustu
+	 */
 	@Override
     protected void onStart() {
         super.onStart();
@@ -117,6 +120,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
     	mLocationClient.connect();
     }
 	
+	/**
+	 * Aftengist stadsetningarthjonustu
+	 */
     @Override
     protected void onStop() {
         // Disconnecting the client invalidates it.
@@ -124,6 +130,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
         super.onStop();
     }
 	
+    /**
+     * Bregst vid nidurstodu fra popup-gluggum
+     */
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
@@ -160,6 +169,11 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		}
 	}
     
+	/**
+	 * Breytir bitmap mynd i base64 streng
+	 * @param image bitmap mynd sem skal breyta
+	 * @return base64 streng
+	 */
     public static String encodeTobase64(Bitmap image) {
         Bitmap immagex=image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();  
@@ -169,8 +183,11 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
         return imageEncoded;
     }
     
-    /*
-     * Fengið að láni frá stackoverflow, snýr mynndum rétt.
+    /**
+     * Snýr myndum rétt.
+     * @param bitmap mynd sem skal snua
+     * @param orientation nuverandi stada myndar
+     * @return mynd sem hefur verid snuid
      */
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
         Matrix matrix = new Matrix();
@@ -214,6 +231,13 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		}
     }
     
+    /**
+     * Skalar nidur myndir
+     * @param realImage mynd sem skal skala nidur
+     * @param maxImageSize hamarks staerd myndar sem fallid a ad skila
+     * @param filter segir til um hvort filtera eigi mynd
+     * @return mynd sem hefur verid skolud nidur
+     */
     public static Bitmap scaleDown(Bitmap realImage, float maxImageSize, boolean filter) {
     	float ratio = Math.min(
     			(float) maxImageSize / realImage.getWidth(),
@@ -223,6 +247,11 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
     	return Bitmap.createScaledBitmap(realImage, width, height, filter);
     }
 
+    /**
+     * Skilar alvoru leid til myndar
+     * @param contentUri gervi leid til myndar
+     * @return hin eiginlega slod
+     */
     public String getRealPathFromURI(Uri contentUri) {
     	String[] projection = { MediaStore.MediaColumns.DATA };
     	@SuppressWarnings("deprecation")
@@ -250,10 +279,8 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		return super.onOptionsItemSelected(item);
 	}
 	
-	/*
+	/**
 	 * Fyllir a tegundir-spinnerinn og setur hlustara a hann
-	 * 
-	 * tekur hvorki vid ne skilar neinu.
 	 */
 	public void fyllaTegundir() {
 		List<String> tegundir = new ArrayList<String>();
@@ -276,26 +303,19 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		});
 	}
 	
-	/*
+	/**
 	 * Fyllir a kyn-spinnerinn
-	 * 
 	 * @param saetistala valkostar i tegund-spinnerhlut stjornar thvi hvada adgerd er valin
 	 */
-	
 	public void fyllaKyn(int tegund) {
 		List<String> kyn = new ArrayList<String>();
 		String[] kynid = null;
 		switch(tegund){
-		case 1: kynid = getResources().getStringArray(R.array.HundaKyn);
-		break;
-		case 2: kynid = getResources().getStringArray(R.array.KattarKyn);
-		break;
-		case 3: kynid = getResources().getStringArray(R.array.HestaKyn);
-		break;
-		case 4: kynid = getResources().getStringArray(R.array.KuaKyn);
-		break;
-		case 5: kynid = getResources().getStringArray(R.array.KindaKyn);
-		break;
+		case 1: kynid = getResources().getStringArray(R.array.HundaKyn); break;
+		case 2: kynid = getResources().getStringArray(R.array.KattarKyn); break;
+		case 3: kynid = getResources().getStringArray(R.array.HestaKyn); break;
+		case 4: kynid = getResources().getStringArray(R.array.KuaKyn); break;
+		case 5: kynid = getResources().getStringArray(R.array.KindaKyn); break;
 		default: kynid = new String[1];
 		kynid[0] = "Veldu tegund";
 		}
@@ -303,14 +323,13 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 			kyn.add(kynid[i]);
 		if (tegund!=0)
 			kyn.add("Veit ekki");
-
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, kyn);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		kynSpinner.setAdapter(adapt);			
 	}
-	/*
-	 * fyllir a undirtegund-spinnerinn
-	 * 
+	
+	/**
+	 * Fyllir a undirtegund-spinnerinn
 	 * @param saetistala valkostar i tegund-spinnerhlut stjornar thvi hvada adgerd er valin
 	 */
 	public void fyllaUndirtegund(int tegund) {
@@ -333,16 +352,13 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 			undirtegund.add(UT[i]);
 		if (tegund!=0)
 			undirtegund.add("Veit ekki");
-		
 		ArrayAdapter<String> adapt = new ArrayAdapter<String>(this, R.layout.spinner_item, undirtegund);
 		adapt.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		undirtegundirSpinner.setAdapter(adapt);
 	}
 	
-	/*
+	/**
 	 * fynnur ut hvort vidkomandi er ad skra fundid eda tynt dyr og breytir vidmoti i takt vid thad
-	 * 
-	 * tekur hvortki vid ne skilar neinu
 	 */
 	public void upphafsstilla() {
 		String titill = getIntent().getStringExtra("titill");
@@ -377,9 +393,8 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
         litirSpinner.setAdapter(adapt);
 	}
 	
-	/*
+	/**
 	 * stillir dagsetningu i dagstening-EditText
-	 * 
 	 * @param dagur manadardagur
 	 * @param manudur tolugildi manadar
 	 * @param ar artal
@@ -389,9 +404,8 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		dagsetning.setText(new StringBuilder().append(dagur).append("/").append(manudur+1).append("/").append(ar));
 	}
 	
-	/*
+	/**
 	 * stillir dagsetning-EditText a daginn i dag og setur hlustara a hann.
-	 * 
 	 * skilar hvortki ne tekur vid neinu
 	 */
 	public void datepicker() {
@@ -410,6 +424,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		});
 	}
 
+	/**
+	 * Frumstillir dagaveljara a daginn i dag
+	 */
 	protected Dialog onCreateDialog(int id) {
 		if (id == dp_id) {
 			Calendar c = Calendar.getInstance();
@@ -421,6 +438,9 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 		return null;
 	}
 	
+	/**
+	 * Setur hlustara a dagaveljara
+	 */
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener(){
 		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
@@ -428,18 +448,19 @@ public class Form extends Activity implements GooglePlayServicesClient.Connectio
 			setDate(dayOfMonth,monthOfYear,year);	
 		}
 	};
-	/*
-	 * fall sem skra takkinn skilar. utbyr json skra sem er sidan send a bakendan okkar
-	 * 
-	 *	@param view hluturinn sem kallar a fallid
-	 */
-	static final int REQUEST_ACCOUNT_PICKER = 2;
 	
+	/**
+	 * Byrjar activity sem leyfir notenda ad skra sig inn
+	 */
 	void chooseAccount() {
 	  startActivityForResult(credential.newChooseAccountIntent(),
 	    REQUEST_ACCOUNT_PICKER);
 	}
 	
+	/**
+	 * fall sem skra takkinn skilar. utbyr json skra sem er sidan send a bakendan okkar
+	 *	@param view hluturinn sem kallar a fallid
+	 */
 	public void skra(View view) throws JSONException {
 		Location loc = mLocationClient.getLastLocation();
 		MessagesCreateAdvertMessage newAdd = new MessagesCreateAdvertMessage();
